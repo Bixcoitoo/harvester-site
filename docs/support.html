@@ -13,9 +13,11 @@
             --secondary-color: #1557b0;
             --bg-color: #f8f9fa;
             --text-color: #202124;
-            --card-bg: #ffffff;
+            --navbar-height: 70px;
+            --container-width: 1200px;
+            --mobile-breakpoint: 768px;
+            --tablet-breakpoint: 1024px;
         }
-
         * {
             margin: 0;
             padding: 0;
@@ -270,6 +272,44 @@
         .faq-item.visible {
             display: block;
         }
+
+        @media (max-width: 768px) {
+            .support-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .support-card {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: var(--spacing-mobile);
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .faq-section {
+                padding: var(--spacing-mobile);
+            }
+            
+            .contact-section {
+                padding: var(--spacing-mobile);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .support-card {
+                padding: 15px;
+            }
+            
+            .card-icon {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -277,13 +317,32 @@
 
     <script>
         fetch('./components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Erro ao carregar a navbar:', error);
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('navbar-placeholder').innerHTML = data;
+        
+        // Inicialização do menu mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
             });
+
+            // Fechar menu ao clicar em um link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                });
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao carregar a navbar:', error);
+    });
     </script>
 
     <div class="container">

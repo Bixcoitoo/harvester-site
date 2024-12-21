@@ -11,9 +11,15 @@
         :root {
             --primary-color: #1a73e8;
             --secondary-color: #1557b0;
+            --bg-color: #f8f9fa;
             --text-color: #202124;
-            --bg-color: #ffffff;
-            --section-bg: #f8f9fa;
+            --navbar-height: 70px;
+            --container-width: 1200px;
+            --mobile-breakpoint: 768px;
+            --tablet-breakpoint: 1024px;
+            --spacing-mobile: 15px;
+            --spacing-tablet: 20px;
+            --spacing-desktop: 30px;
         }
 
         * {
@@ -28,10 +34,11 @@
             color: var(--text-color);
             line-height: 1.6;
             padding-top: 70px;
+            font-size: 16px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: var(--container-width);
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -629,6 +636,70 @@
                 max-height: 250px;
             }
         }
+
+        @media (max-width: 768px) {
+            .docs-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .support-card {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .faq-container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .installation-steps {
+                padding: 15px;
+            }
+            
+            .step-card {
+                flex-direction: column;
+            }
+            
+            .step-image {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Ajustes de texto responsivos */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+            
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.8em; }
+            h3 { font-size: 1.5em; }
+            
+            .section-padding {
+                padding: var(--spacing-mobile) 0;
+            }
+        }
+
+        /* Imagens responsivas globais */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -790,23 +861,32 @@
 
     <script>
         fetch('./components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-                // Importante: Inicializar o menu mobile após carregar a navbar
-                const menuToggle = document.querySelector('.menu-toggle');
-                const navLinks = document.querySelector('.nav-links');
-                
-                if (menuToggle && navLinks) {
-                    menuToggle.addEventListener('click', () => {
-                        navLinks.classList.toggle('active');
-                        document.body.classList.toggle('menu-open');
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbar-placeholder').innerHTML = data;
+            
+            // Inicialização do menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                });
+    
+                // Fechar menu ao clicar em um link
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
                     });
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao carregar a navbar:', error);
-            });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar a navbar:', error);
+        });
     </script>
     <script src="js/main.js"></script>
 </body>

@@ -3,8 +3,13 @@
     --secondary-color: #1557b0;
     --bg-color: #f8f9fa;
     --text-color: #202124;
-    --sidebar-width: 280px;
     --navbar-height: 70px;
+    --container-width: 1200px;
+    --mobile-breakpoint: 768px;
+    --tablet-breakpoint: 1024px;
+    --spacing-mobile: 15px;
+    --spacing-tablet: 20px;
+    --spacing-desktop: 30px;
 }
 
 * {

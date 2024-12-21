@@ -12,8 +12,10 @@
             --secondary-color: #1557b0;
             --bg-color: #f8f9fa;
             --text-color: #202124;
-            --sidebar-width: 280px;
             --navbar-height: 70px;
+            --container-width: 1200px;
+            --mobile-breakpoint: 768px;
+            --tablet-breakpoint: 1024px;
         }
 
         * {
@@ -30,15 +32,7 @@
             padding-top: var(--navbar-height);
         }
 
-        /* Navbar styles */
-        .navbar {
-            background-color: var(--bg-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
+        
 
         .nav-container {
             max-width: 1200px;
@@ -798,23 +792,32 @@ harvester.download("https://exemplo.com/video", {
 
     <script>
         fetch('./components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-                // Importante: Inicializar o menu mobile após carregar a navbar
-                const menuToggle = document.querySelector('.menu-toggle');
-                const navLinks = document.querySelector('.nav-links');
-                
-                if (menuToggle && navLinks) {
-                    menuToggle.addEventListener('click', () => {
-                        navLinks.classList.toggle('active');
-                        document.body.classList.toggle('menu-open');
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbar-placeholder').innerHTML = data;
+            
+            // Inicialização do menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                });
+    
+                // Fechar menu ao clicar em um link
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
                     });
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao carregar a navbar:', error);
-            });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar a navbar:', error);
+        });
     </script>
     <script src="js/main.js"></script>
 </body>
