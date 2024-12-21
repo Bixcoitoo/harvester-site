@@ -174,7 +174,20 @@
     </style>
 </head>
 <body>
-    <div id="navbar-placeholder"></div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/icons/icone.png" alt="Harvester Logo">
+                Harvester
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Início</a>
+                <a href="install_guide.html">Instalação</a>
+                <a href="documentation.html">Documentação</a>
+                <a href="support.html">Suporte</a>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
         <h1>Guia de Instalação do Harvester</h1>
@@ -230,32 +243,5 @@
             <p>Em caso de problemas durante a instalação ou uso do programa, consulte nossa <a href="support.html" style="color: var(--primary-color); text-decoration: none;">página de suporte</a> ou entre em contato através do GitHub.</p>
         </div>
     </div>
-
-    <script>
-        fetch('./components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Erro ao carregar a navbar:', error);
-                document.getElementById('navbar-placeholder').innerHTML = `
-                    <nav class="navbar">
-                        <div class="nav-container">
-                            <a href="index.html" class="logo">
-                                <img src="assets/icons/icone.png" alt="Harvester Logo">
-                                Harvester
-                            </a>
-                            <div class="nav-links">
-                                <a href="index.html">Início</a>
-                                <a href="install_guide.html">Instalação</a>
-                                <a href="documentation.html">Documentação</a>
-                                <a href="support.html">Suporte</a>
-                            </div>
-                        </div>
-                    </nav>
-                `;
-            });
-    </script>
 </body>
 </html>

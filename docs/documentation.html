@@ -87,13 +87,119 @@
 
         /* Sidebar */
         .sidebar {
-            width: var(--sidebar-width);
-            background: white;
-            padding: 30px;
             position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            width: var(--sidebar-width);
             height: calc(100vh - var(--navbar-height));
-            overflow-y: auto;
+            background: white;
             border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .search-box {
+            position: sticky;
+            top: 0;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            z-index: 101;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 40px;
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 8px;
+            z-index: 1000;
+        }
+
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .search-result-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .search-result-item .result-title {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .search-result-item .result-context {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .highlight-text {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #666;
+            cursor: pointer;
+            z-index: 1;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0 20px 0;
         }
 
         .sidebar-nav {
@@ -105,18 +211,18 @@
         }
 
         .sidebar-nav a {
-            color: var(--text-color);
-            text-decoration: none;
             display: block;
             padding: 8px 15px;
-            border-radius: 6px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-left: 3px solid transparent;
             transition: all 0.3s ease;
         }
 
-        .sidebar-nav a:hover,
         .sidebar-nav a.active {
-            background: #e8f0fe;
             color: var(--primary-color);
+            background-color: #e8f0fe;
+            border-left-color: var(--primary-color);
         }
 
         .sidebar-section {
@@ -135,13 +241,13 @@
         /* Main Content */
         .content {
             margin-left: var(--sidebar-width);
-            padding: 40px;
+            padding: 30px;
             max-width: calc(100% - var(--sidebar-width));
         }
 
         .doc-section {
-            max-width: 800px;
-            margin-bottom: 60px;
+            scroll-margin-top: 80px;
+            padding: 20px 0;
         }
 
         .doc-section h1 {
@@ -151,9 +257,8 @@
         }
 
         .doc-section h2 {
-            margin: 40px 0 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            padding-top: 20px;
+            margin-bottom: 30px;
         }
 
         .doc-section h3 {
@@ -213,15 +318,32 @@
         /* Search Bar */
         .search-box {
             padding: 15px;
-            margin-bottom: 30px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: var(--navbar-height);
+            z-index: 100;
         }
 
         .search-input {
             width: 100%;
             padding: 10px 15px;
-            border: 1px solid #ddd;
+            border: 2px solid #ddd;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 0;
+            border-radius: 3px;
         }
 
         /* Responsive Design */
@@ -244,6 +366,105 @@
                 display: block;
             }
         }
+
+        .error-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .error-table th,
+        .error-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .error-table th {
+            background-color: #f5f5f5;
+        }
+
+        .doc-section {
+            margin-bottom: 40px;
+        }
+
+        .doc-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .doc-section h3 {
+            margin: 20px 0 10px;
+        }
+
+        .doc-section ul,
+        .doc-section ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .note {
+            background-color: #e8f0fe;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        /* Estilos da barra lateral */
+        .sidebar-section h3 {
+            font-size: 1.2em;
+            color: var(--primary-color);
+            padding: 15px;
+            margin-top: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            background-color: #f0f4fe;
+        }
+
+        /* Estilos do conteúdo principal */
+        .doc-section h2 {
+            font-size: 2.2em;
+            color: var(--primary-color);
+            margin: 40px 0 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .doc-section h3 {
+            font-size: 1.6em;
+            margin: 30px 0 15px;
+            color: var(--secondary-color);
+        }
+
+        .doc-section {
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .doc-section:last-child {
+            border-bottom: none;
+        }
+
+        /* Ajuste para o primeiro título não ficar coberto */
+        .doc-section:first-child {
+            padding-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -255,14 +476,17 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="search-box">
-                <input type="text" class="search-input" placeholder="Pesquisar na documentação...">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Pesquisar na documentação...">
+                </div>
+                <div class="search-results"></div>
             </div>
 
             <nav class="sidebar-nav">
                 <div class="sidebar-section">
                     <h3>Introdução</h3>
                     <ul>
-                        <li><a href="#getting-started" class="active">Começando</a></li>
+                        <li><a href="#getting-started">Começando</a></li>
                         <li><a href="#installation">Instalação</a></li>
                         <li><a href="#quick-start">Guia Rápido</a></li>
                     </ul>
@@ -273,7 +497,7 @@
                     <ul>
                         <li><a href="#basic-usage">Uso Básico</a></li>
                         <li><a href="#advanced-features">Recursos Avançados</a></li>
-                        <li><a href="#configurations">Configurações</a></li>
+                        <li><a href="#settings">Configurações</a></li>
                     </ul>
                 </div>
 
@@ -289,9 +513,8 @@
                 <div class="sidebar-section">
                     <h3>Referência</h3>
                     <ul>
-                        <li><a href="#api-reference">API</a></li>
-                        <li><a href="#cli-commands">Comandos CLI</a></li>
                         <li><a href="#error-codes">Códigos de Erro</a></li>
+                        <li><a href="#troubleshooting">Solução de Problemas</a></li>
                     </ul>
                 </div>
             </nav>
@@ -299,6 +522,7 @@
 
         <!-- Main Content -->
         <main class="content">
+            <!-- 1. Introdução -->
             <section id="getting-started" class="doc-section">
                 <h1>Documentação do Harvester</h1>
                 <p>Bem-vindo à documentação oficial do Harvester. Aqui você encontrará tudo o que precisa saber para utilizar o software de forma eficiente.</p>
@@ -354,7 +578,207 @@ harvester.download("https://exemplo.com/video", {
                 </div>
             </section>
 
-            <!-- Adicione mais seções conforme necessário -->
+            <section id="installation" class="doc-section">
+                <h2>Instalação</h2>
+                <p>O processo de instalação do Harvester é simples e direto:</p>
+                
+                <ol>
+                    <li>Faça o download do instalador mais recente</li>
+                    <li>Execute o arquivo HarvesterSetup.exe</li>
+                    <li>Siga as instruções do assistente de instalação</li>
+                    <li>Aguarde a conclusão do processo</li>
+                </ol>
+
+                <div class="note">
+                    <h3>📝 Nota sobre Antivírus</h3>
+                    <p>Alguns antivírus podem alertar sobre o instalador. Isso é um falso positivo devido à falta de certificação digital.</p>
+                </div>
+            </section>
+
+            <section id="quick-start" class="doc-section">
+                <h2>Guia Rápido</h2>
+                <p>Comece a usar o Harvester em poucos passos:</p>
+                
+                <ol>
+                    <li>Instale o programa seguindo o guia de instalação</li>
+                    <li>Execute o Harvester</li>
+                    <li>Cole o link do conteúdo desejado</li>
+                    <li>Escolha o formato e qualidade</li>
+                    <li>Clique em "Baixar"</li>
+                </ol>
+
+                <div class="note">
+                    <h3>💡 Dica</h3>
+                    <p>Mantenha o programa atualizado para ter acesso a todas as funcionalidades mais recentes.</p>
+                </div>
+            </section>
+
+            <!-- 2. Funcionalidades -->
+            <section id="basic-usage" class="doc-section">
+                <h2>Uso Básico</h2>
+                <h3>Download de Vídeos</h3>
+                <ol>
+                    <li>Copie o link do vídeo desejado</li>
+                    <li>Cole o link no campo principal do Harvester</li>
+                    <li>Selecione o formato de saída (MP4)</li>
+                    <li>Escolha a qualidade desejada</li>
+                    <li>Clique em "Baixar"</li>
+                </ol>
+
+                <h3>Download de Áudio</h3>
+                <ol>
+                    <li>Copie o link do vídeo</li>
+                    <li>Cole no Harvester</li>
+                    <li>Selecione o formato MP3</li>
+                    <li>Escolha a qualidade do áudio</li>
+                    <li>Clique em "Baixar"</li>
+                </ol>
+            </section>
+
+            <section id="advanced-features" class="doc-section">
+                <h2>Recursos Avançados</h2>
+                
+                <h3>Download de Playlists</h3>
+                <p>Para baixar playlists completas:</p>
+                <ol>
+                    <li>Cole o link da playlist</li>
+                    <li>Selecione os vídeos desejados</li>
+                    <li>Configure formato e qualidade</li>
+                    <li>Inicie o download</li>
+                </ol>
+
+                <h3>Downloads Simultâneos</h3>
+                <p>O Harvester suporta múltiplos downloads:</p>
+                <ul>
+                    <li>Adicione vários links à fila</li>
+                    <li>Configure cada download individualmente</li>
+                    <li>Monitore o progresso na aba "Downloads"</li>
+                </ul>
+            </section>
+
+            <section id="settings" class="doc-section">
+                <h2>Configurações</h2>
+                <h3>Pasta de Download</h3>
+                <p>Para alterar o local dos downloads:</p>
+                <ol>
+                    <li>Acesse as Configurações</li>
+                    <li>Clique em "Escolher Pasta"</li>
+                    <li>Selecione o novo local</li>
+                    <li>Salve as alterações</li>
+                </ol>
+
+                <h3>Qualidade Padrão</h3>
+                <p>Configure a qualidade padrão para novos downloads:</p>
+                <ul>
+                    <li>Vídeo: 720p, 1080p, 4K</li>
+                    <li>Áudio: 128kbps, 192kbps, 320kbps</li>
+                </ul>
+            </section>
+
+            <!-- 3. Tutoriais -->
+            <section id="video-download" class="doc-section">
+                <h2>Download de Vídeos</h2>
+                <p>Tutorial detalhado para download de vídeos:</p>
+
+                <h3>Passo a Passo</h3>
+                <ol>
+                    <li>Copie o link do vídeo da plataforma de origem</li>
+                    <li>Cole o link no campo principal do Harvester</li>
+                    <li>Selecione o formato MP4</li>
+                    <li>Escolha a qualidade do vídeo (até 4K quando disponível)</li>
+                    <li>Selecione a pasta de destino (opcional)</li>
+                    <li>Clique em "Baixar"</li>
+                </ol>
+
+                <div class="note">
+                    <h3>📝 Nota</h3>
+                    <p>A qualidade máxima disponível depende do vídeo original.</p>
+                </div>
+            </section>
+
+            <section id="audio-download" class="doc-section">
+                <h2>Download de Áudio</h2>
+                <p>Como extrair áudio de vídeos:</p>
+
+                <h3>Instruções</h3>
+                <ol>
+                    <li>Cole o link do vídeo no Harvester</li>
+                    <li>Selecione o formato MP3</li>
+                    <li>Escolha a qualidade do áudio (até 320kbps)</li>
+                    <li>Defina o local de salvamento</li>
+                    <li>Inicie o download</li>
+                </ol>
+
+                <h3>Formatos Suportados</h3>
+                <ul>
+                    <li>MP3 (128kbps - 320kbps)</li>
+                    <li>M4A (Alta qualidade)</li>
+                    <li>WAV (Sem compressão)</li>
+                </ul>
+            </section>
+
+            <section id="playlist-download" class="doc-section">
+                <h2>Download de Playlists</h2>
+                <p>Como baixar playlists completas:</p>
+
+                <h3>Processo</h3>
+                <ol>
+                    <li>Cole o link da playlist</li>
+                    <li>Aguarde o carregamento da lista de vídeos</li>
+                    <li>Selecione os vídeos desejados</li>
+                    <li>Escolha o formato (MP3 ou MP4)</li>
+                    <li>Configure a qualidade</li>
+                    <li>Inicie o download em lote</li>
+                </ol>
+
+                <div class="note">
+                    <h3>⚡ Dica de Performance</h3>
+                    <p>Para playlists grandes, recomendamos baixar em grupos menores para melhor gerenciamento.</p>
+                </div>
+            </section>
+
+            <!-- 4. Referência -->
+            <section id="error-codes" class="doc-section">
+                <h2>Códigos de Erro</h2>
+                <table class="error-table">
+                    <tr>
+                        <th>Código</th>
+                        <th>Descrição</th>
+                        <th>Solução</th>
+                    </tr>
+                    <tr>
+                        <td>ERR_001</td>
+                        <td>Link inválido</td>
+                        <td>Verifique se o link está correto e acessível</td>
+                    </tr>
+                    <tr>
+                        <td>ERR_002</td>
+                        <td>Falha na conexão</td>
+                        <td>Verifique sua conexão com a internet</td>
+                    </tr>
+                    <tr>
+                        <td>ERR_003</td>
+                        <td>Erro de permissão</td>
+                        <td>Execute o programa como administrador</td>
+                    </tr>
+                    <tr>
+                        <td>ERR_004</td>
+                        <td>Espaço insuficiente</td>
+                        <td>Libere espaço no disco de destino</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="troubleshooting" class="doc-section">
+                <h2>Solução de Problemas</h2>
+                <h3>Problemas Comuns</h3>
+                <ul>
+                    <li>Downloads lentos: Verifique sua conexão e tente uma qualidade menor</li>
+                    <li>Falhas de conversão: Reinstale o programa para atualizar os codecs</li>
+                    <li>Erros de permissão: Execute como administrador</li>
+                    <li>Programa não abre: Verifique os requisitos mínimos do sistema</li>
+                </ul>
+            </section>
         </main>
     </div>
 
@@ -397,6 +821,138 @@ harvester.download("https://exemplo.com/video", {
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('active');
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleciona todos os links da barra lateral
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            // Observador de interseção para detectar seções visíveis
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Remove classe ativa de todos os links
+                        sidebarLinks.forEach(link => link.classList.remove('active'));
+                        
+                        // Adiciona classe ativa ao link correspondente
+                        const activeLink = document.querySelector(`.sidebar-nav a[href="#${entry.target.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.5,
+                rootMargin: '-70px 0px -50% 0px'
+            });
+
+            // Observa todas as seções
+            document.querySelectorAll('.doc-section').forEach(section => {
+                observer.observe(section);
+            });
+
+            // Adiciona evento de clique para rolagem suave
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        const offset = 80; // Ajuste para compensar a navbar
+                        const targetPosition = targetSection.offsetTop - offset;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            const searchResults = document.querySelector('.search-results');
+            
+            if (searchInput && searchResults) {
+                let searchTimeout;
+
+                function getSearchContext(content, query) {
+                    const index = content.toLowerCase().indexOf(query.toLowerCase());
+                    if (index === -1) return '';
+                    
+                    const start = Math.max(0, index - 50);
+                    const end = Math.min(content.length, index + query.length + 50);
+                    let context = content.slice(start, end);
+                    
+                    if (start > 0) context = '...' + context;
+                    if (end < content.length) context += '...';
+                    
+                    return context;
+                }
+
+                function performSearch(query) {
+                    if (!query) {
+                        searchResults.style.display = 'none';
+                        return;
+                    }
+
+                    const sections = document.querySelectorAll('.doc-section');
+                    const results = [];
+
+                    sections.forEach(section => {
+                        const title = section.querySelector('h2')?.textContent || '';
+                        const content = section.textContent;
+                        
+                        if (title.toLowerCase().includes(query.toLowerCase()) || 
+                            content.toLowerCase().includes(query.toLowerCase())) {
+                            
+                            const context = getSearchContext(content, query);
+                            results.push({
+                                title: title,
+                                context: context,
+                                element: section
+                            });
+                        }
+                    });
+
+                    if (results.length > 0) {
+                        searchResults.innerHTML = results.map(result => `
+                            <div class="search-result-item" data-section-id="${result.element.id}">
+                                <div class="result-title">${result.title}</div>
+                                <div class="result-context">${result.context}</div>
+                            </div>
+                        `).join('');
+                        
+                        searchResults.style.display = 'block';
+                        
+                        // Adiciona eventos de clique nos resultados
+                        document.querySelectorAll('.search-result-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                const section = document.getElementById(item.dataset.sectionId);
+                                if (section) {
+                                    section.scrollIntoView({ behavior: 'smooth' });
+                                    searchResults.style.display = 'none';
+                                }
+                            });
+                        });
+                    } else {
+                        searchResults.innerHTML = `
+                            <div class="search-result-item">
+                                <div class="result-title">Nenhum resultado encontrado</div>
+                            </div>
+                        `;
+                        searchResults.style.display = 'block';
+                    }
+                }
+
+                searchInput.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => performSearch(value), 300);
+                });
+            }
+        });
     </script>
 </body>
 </html> 

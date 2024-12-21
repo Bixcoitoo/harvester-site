@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Instalação - Harvester</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #1557b0;
+            --bg-color: #f8f9fa;
+            --text-color: #202124;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .step {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .step h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .step h2[data-number]::before {
+            content: attr(data-number);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .note {
+            background-color: #e7f3ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guia de Instalação do Harvester</h1>
+
+        <div class="warning">
+            <h3>⚠️ Aviso do Windows Defender</h3>
+            <p>É normal que o Windows Defender mostre um aviso ao executar o instalador. Isso acontece porque o software ainda não possui uma certificação digital.</p>
+        </div>
+
+        <div class="step">
+            <h2 data-number="1">Baixando o Instalador</h2>
+            <p>Após clicar no botão de download, o arquivo <strong>HarvesterSetup.exe</strong> será baixado para seu computador.</p>
+        </div>
+
+        <div class="step">
+            <h2 data-number="2">Executando o Instalador</h2>
+            <p>Dê um duplo clique no arquivo baixado e siga as instruções na tela.</p>
+            <div class="note">
+                <p>Se aparecer um aviso do Windows Defender, clique em "Mais informações" e depois em "Executar assim mesmo".</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2 data-number="3">Concluindo a Instalação</h2>
+            <p>Após a instalação, o Harvester estará pronto para uso. Você encontrará o ícone na sua área de trabalho.</p>
+        </div>
+
+        <div class="warning">
+            <h3>📝 Suporte</h3>
+            <p>Em caso de problemas durante a instalação ou uso do programa, consulte nossa <a href="#" onclick="openSupport(event)" style="color: var(--primary-color); text-decoration: none;">página de suporte</a> ou entre em contato através do GitHub.</p>
+        </div>
+
+        <script>
+            function openSupport(event) {
+                event.preventDefault();
+                // Fecha o modal na janela pai
+                window.parent.closeModal();
+                // Redireciona para a página de suporte
+                window.parent.location.href = 'support.html';
+            }
+        </script>
+    </div>
+</body>
+</html> 
