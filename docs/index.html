@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harvester - Download de Músicas e Vídeos</title>
+    <link rel="icon" href="assets/icons/icone.png" type="image/png">
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -24,6 +25,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            padding-top: 56px;
         }
 
         .container {
@@ -144,9 +146,33 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Estilo da Navbar */
+        .navbar {
+            background-color: #24292e;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .navbar-logo {
+            height: 32px;
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <img src="assets/icons/downyt.png" alt="Harvester Logo" class="navbar-logo">
+    </nav>
+
     <div class="hero">
         <div class="container">
             <h1>Harvester</h1>
