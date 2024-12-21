@@ -262,13 +262,32 @@
 
     <script>
         fetch('./components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Erro ao carregar a navbar:', error);
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('navbar-placeholder').innerHTML = data;
+        
+        // Inicialização do menu mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
             });
+
+            // Fechar menu ao clicar em um link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                });
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao carregar a navbar:', error);
+    });
     </script>
     <script src="js/main.js"></script>
 </body>
