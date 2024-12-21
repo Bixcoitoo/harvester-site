@@ -676,21 +676,32 @@
     </style>
 </head>
 <body>
-    <!-- Navbar atualizada -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="assets/icons/icone.png" alt="Harvester Logo">
-                Harvester
-            </a>
-            <div class="nav-links">
-                <a href="index.html">Início</a>
-                <a href="install_guide.html">Instalação</a>
-                <a href="documentation.html">Documentação</a>
-                <a href="support.html">Suporte</a>
-            </div>
-        </div>
-    </nav>
+    <script>
+        fetch('./components/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a navbar:', error);
+                document.getElementById('navbar-placeholder').innerHTML = `
+                    <nav class="navbar">
+                        <div class="nav-container">
+                            <a href="index.html" class="logo">
+                                <img src="assets/icons/icone.png" alt="Harvester Logo">
+                                Harvester
+                            </a>
+                            <div class="nav-links">
+                                <a href="index.html">Início</a>
+                                <a href="install_guide.html">Instalação</a>
+                                <a href="documentation.html">Documentação</a>
+                                <a href="support.html">Suporte</a>
+                            </div>
+                        </div>
+                    </nav>
+                `;
+            });
+    </script>
 
     <div class="hero">
         <div class="container">

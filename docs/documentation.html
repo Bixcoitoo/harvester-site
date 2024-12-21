@@ -359,15 +359,13 @@ harvester.download("https://exemplo.com/video", {
     </div>
 
     <script>
-        // Carrega a navbar com caminho absoluto
-        fetch('/docs/components/navbar.html')
+        fetch('./components/navbar.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('navbar-placeholder').innerHTML = data;
             })
             .catch(error => {
                 console.error('Erro ao carregar a navbar:', error);
-                // Fallback para navbar estática em caso de erro
                 document.getElementById('navbar-placeholder').innerHTML = `
                     <nav class="navbar">
                         <div class="nav-container">

@@ -220,14 +220,13 @@
     <div id="navbar-placeholder"></div>
 
     <script>
-        fetch('/docs/components/navbar.html')
+        fetch('./components/navbar.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('navbar-placeholder').innerHTML = data;
             })
             .catch(error => {
                 console.error('Erro ao carregar a navbar:', error);
-                // Fallback para navbar estática
                 document.getElementById('navbar-placeholder').innerHTML = `
                     <nav class="navbar">
                         <div class="nav-container">
