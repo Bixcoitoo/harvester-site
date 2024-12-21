@@ -27,6 +27,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            padding-top: var(--navbar-height);
         }
 
         /* Navbar styles */
@@ -118,18 +119,26 @@
         .search-input {
             width: 100%;
             height: 40px;
-            padding: 8px 15px;
+            padding-left: 35px;
+            padding-right: 35px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
             line-height: 24px;
             transition: all 0.3s ease;
+            text-overflow: ellipsis;
         }
 
-        .search-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #666;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .search-results {
@@ -468,7 +477,6 @@
     </style>
 </head>
 <body>
-    <!-- Include navbar -->
     <div id="navbar-placeholder"></div>
 
     <!-- Documentation Container -->
@@ -477,7 +485,13 @@
         <aside class="sidebar">
             <div class="search-box">
                 <div class="search-container">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                    </svg>
                     <input type="text" class="search-input" placeholder="Pesquisar na documentação...">
+                    <svg class="search-clear" width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                    </svg>
                 </div>
                 <div class="search-results"></div>
             </div>
@@ -783,176 +797,25 @@ harvester.download("https://exemplo.com/video", {
     </div>
 
     <script>
-        fetch('./components/navbar.html')        .then(response => response.text())
-        .then(data => {
-            document.getElementById('navbar-placeholder').innerHTML = data;
-        })
-        .catch(error => {
-            console.error('Erro ao carregar a navbar:', error);
-            document.getElementById('navbar-placeholder').innerHTML = `
-                <nav class="navbar">
-                    <div class="nav-container">
-                        <a href="index.html" class="logo">
-                            <img src="assets/icons/icone.png" alt="Harvester Logo">
-                            Harvester
-                        </a>
-                        <div class="nav-links">
-                            <a href="index.html">Início</a>
-                            <a href="install_guide.html">Instalação</a>
-                            <a href="documentation.html">Documentação</a>
-                            <a href="support.html">Suporte</a>
-                        </div>
-                    </div>
-                </nav>
-            `;
-        });
-    
-
-        // Active link tracking
-        const links = document.querySelectorAll('.sidebar-nav a');
-        links.forEach(link => {
-            link.addEventListener('click', function() {
-                links.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Responsive sidebar
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Seleciona todos os links da barra lateral
-            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
-            
-            // Observador de interseção para detectar seções visíveis
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Remove classe ativa de todos os links
-                        sidebarLinks.forEach(link => link.classList.remove('active'));
-                        
-                        // Adiciona classe ativa ao link correspondente
-                        const activeLink = document.querySelector(`.sidebar-nav a[href="#${entry.target.id}"]`);
-                        if (activeLink) {
-                            activeLink.classList.add('active');
-                        }
-                    }
-                });
-            }, {
-                threshold: 0.5,
-                rootMargin: '-70px 0px -50% 0px'
-            });
-
-            // Observa todas as seções
-            document.querySelectorAll('.doc-section').forEach(section => {
-                observer.observe(section);
-            });
-
-            // Adiciona evento de clique para rolagem suave
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
-                    
-                    if (targetSection) {
-                        const offset = 80; // Ajuste para compensar a navbar
-                        const targetPosition = targetSection.offsetTop - offset;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.querySelector('.search-input');
-            const searchResults = document.querySelector('.search-results');
-            
-            if (searchInput && searchResults) {
-                let searchTimeout;
-
-                function getSearchContext(content, query) {
-                    const index = content.toLowerCase().indexOf(query.toLowerCase());
-                    if (index === -1) return '';
-                    
-                    const start = Math.max(0, index - 50);
-                    const end = Math.min(content.length, index + query.length + 50);
-                    let context = content.slice(start, end);
-                    
-                    if (start > 0) context = '...' + context;
-                    if (end < content.length) context += '...';
-                    
-                    return context;
-                }
-
-                function performSearch(query) {
-                    if (!query) {
-                        searchResults.style.display = 'none';
-                        return;
-                    }
-
-                    const sections = document.querySelectorAll('.doc-section');
-                    const results = [];
-
-                    sections.forEach(section => {
-                        const title = section.querySelector('h2')?.textContent || '';
-                        const content = section.textContent;
-                        
-                        if (title.toLowerCase().includes(query.toLowerCase()) || 
-                            content.toLowerCase().includes(query.toLowerCase())) {
-                            
-                            const context = getSearchContext(content, query);
-                            results.push({
-                                title: title,
-                                context: context,
-                                element: section
-                            });
-                        }
+        fetch('./components/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+                // Importante: Inicializar o menu mobile após carregar a navbar
+                const menuToggle = document.querySelector('.menu-toggle');
+                const navLinks = document.querySelector('.nav-links');
+                
+                if (menuToggle && navLinks) {
+                    menuToggle.addEventListener('click', () => {
+                        navLinks.classList.toggle('active');
+                        document.body.classList.toggle('menu-open');
                     });
-
-                    if (results.length > 0) {
-                        searchResults.innerHTML = results.map(result => `
-                            <div class="search-result-item" data-section-id="${result.element.id}">
-                                <div class="result-title">${result.title}</div>
-                                <div class="result-context">${result.context}</div>
-                            </div>
-                        `).join('');
-                        
-                        searchResults.style.display = 'block';
-                        
-                        // Adiciona eventos de clique nos resultados
-                        document.querySelectorAll('.search-result-item').forEach(item => {
-                            item.addEventListener('click', () => {
-                                const section = document.getElementById(item.dataset.sectionId);
-                                if (section) {
-                                    section.scrollIntoView({ behavior: 'smooth' });
-                                    searchResults.style.display = 'none';
-                                }
-                            });
-                        });
-                    } else {
-                        searchResults.innerHTML = `
-                            <div class="search-result-item">
-                                <div class="result-title">Nenhum resultado encontrado</div>
-                            </div>
-                        `;
-                        searchResults.style.display = 'block';
-                    }
                 }
-
-                searchInput.addEventListener('input', function(e) {
-                    const value = e.target.value;
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => performSearch(value), 300);
-                });
-            }
-        });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a navbar:', error);
+            });
     </script>
+    <script src="js/main.js"></script>
 </body>
 </html> 

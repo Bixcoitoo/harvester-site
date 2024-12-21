@@ -347,56 +347,7 @@
             }
         }
 
-        /* Estilo da Navbar */
-        .navbar {
-            background-color: var(--bg-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            height: 70px;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .logo img {
-            height: 32px;
-        }
+      
 
         /* Scroll suave para toda a página */
         html {
@@ -681,22 +632,7 @@
     </style>
 </head>
 <body>
-    <div id="navbar-placeholder">
-        <nav class="navbar">
-            <div class="nav-container">
-                <a href="index.html" class="logo">
-                    <img src="assets/icons/icone.png" alt="Harvester Logo">
-                    Harvester
-                </a>
-                <div class="nav-links">
-                    <a href="index.html">Início</a>
-                    <a href="install_guide.html">Instalação</a>
-                    <a href="documentation.html">Documentação</a>
-                    <a href="support.html">Suporte</a>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <div id="navbar-placeholder"></div>
 
     <div class="hero">
         <div class="container">
@@ -853,110 +789,25 @@
     </footer>
 
     <script>
-        // Aguarda o DOM estar completamente carregado
-        document.addEventListener('DOMContentLoaded', function() {
-            const imageModal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImg');
-            const modalCaption = document.getElementById('modalCaption');
-            const carouselItems = document.querySelectorAll('.carousel-item img');
-
-            if (carouselItems) {
-                carouselItems.forEach(img => {
-                    if (img) {
-                        img.style.cursor = 'pointer';
-                        img.onclick = function() {
-                            if (imageModal && modalImg && modalCaption) {
-                                imageModal.style.display = 'block';
-                                modalImg.src = this.src;
-                                modalCaption.textContent = this.alt;
-                                document.body.style.overflow = 'hidden';
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (imageModal) {
-                imageModal.onclick = function(event) {
-                    if (event.target === imageModal) {
-                        closeImageModal();
-                    }
+        fetch('./components/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+                // Importante: Inicializar o menu mobile após carregar a navbar
+                const menuToggle = document.querySelector('.menu-toggle');
+                const navLinks = document.querySelector('.nav-links');
+                
+                if (menuToggle && navLinks) {
+                    menuToggle.addEventListener('click', () => {
+                        navLinks.classList.toggle('active');
+                        document.body.classList.toggle('menu-open');
+                    });
                 }
-            }
-
-            function closeImageModal() {
-                if (modalImg && imageModal) {
-                    modalImg.classList.add('zoom-out');
-                    setTimeout(() => {
-                        imageModal.style.display = 'none';
-                        modalImg.classList.remove('zoom-out');
-                        document.body.style.overflow = 'auto';
-                    }, 300);
-                }
-            }
-
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    if (imageModal && imageModal.style.display === 'block') {
-                        closeImageModal();
-                    }
-                    const installGuideModal = document.getElementById('installGuideModal');
-                    if (installGuideModal && installGuideModal.style.display === 'block') {
-                        closeModal();
-                    }
-                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a navbar:', error);
             });
-        });
-
-        // Verifica se é a primeira visita
-        document.addEventListener('DOMContentLoaded', function() {
-            const hasVisited = localStorage.getItem('hasVisitedHarvester');
-            
-            if (!hasVisited) {
-                // Se for primeira visita, mostra o guia
-                document.getElementById('installGuideModal').style.display = 'block';
-                // Marca que já visitou
-                localStorage.setItem('hasVisitedHarvester', 'true');
-            }
-        });
-
-        // Função para fechar o modal
-        function closeModal() {
-            const modal = document.getElementById('installGuideModal');
-            if (modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        // Fechar modal ao clicar fora
-        document.getElementById('installGuideModal').onclick = function(event) {
-            if (event.target === this) {
-                closeModal();
-            }
-        }
-
-        // Fechar modal com tecla ESC
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeModal();
-            }
-        });
     </script>
-
-    <!-- Modal do Guia de Instalação -->
-    <div id="installGuideModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <iframe src="install_guide_modal.html" width="100%" height="500px" frameborder="0"></iframe>
-        </div>
-    </div>
-
-    <!-- Modal para as Imagens -->
-    <div id="imageModal" class="modal-image">
-        <span class="modal-image-close">&times;</span>
-        <img class="modal-image-content" id="modalImage">
-        <div id="modalCaption"></div>
-    </div>
+    <script src="js/main.js"></script>
 </body>
 </html> 

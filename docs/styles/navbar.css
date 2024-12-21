@@ -1,3 +1,4 @@
+/* Estilo base da navbar */
 .navbar {
     background-color: var(--bg-color);
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -10,10 +11,11 @@
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 15px 20px;
+    padding: 0 20px;
+    height: var(--navbar-height);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
 }
 
 .logo {
@@ -21,8 +23,6 @@
     align-items: center;
     text-decoration: none;
     color: var(--text-color);
-    font-weight: bold;
-    font-size: 1.5em;
 }
 
 .logo img {
@@ -32,16 +32,136 @@
 
 .nav-links {
     display: flex;
-    gap: 30px;
+    align-items: center;
+    gap: 20px;
 }
 
 .nav-links a {
-    color: var(--text-color);
     text-decoration: none;
+    color: var(--text-color);
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: color 0.3s;
 }
 
 .nav-links a:hover {
     color: var(--primary-color);
+}
+
+/* Menu mobile - inicialmente oculto */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 2px;
+    background-color: var(--text-color);
+    transition: 0.3s;
+}
+
+/* Media query para mobile */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: var(--navbar-height);
+        right: -100%;
+        width: 100%;
+        height: calc(100vh - var(--navbar-height));
+        background: #ffffff;
+        flex-direction: column;
+        padding: 20px;
+        transition: 0.3s ease;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links a {
+        padding: 15px 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .nav-links a:last-child {
+        border-bottom: none;
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+/* Telas muito grandes */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1800px;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 15px;
+    }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+}
+
+/* Grid system responsivo */
+.grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Containers flexíveis */
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Imagens responsivas */
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ajustes para texto */
+@media (max-width: 768px) {
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.5em; }
+    body { font-size: 16px; }
+}
+
+/* Ajustes para sidebar */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        width: 100%;
+    }
 } 

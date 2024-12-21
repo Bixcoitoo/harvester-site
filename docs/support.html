@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suporte - Harvester</title>
     <link rel="icon" href="assets/icons/icone.png" type="image/png">
+    <link rel="stylesheet" href="styles/navbar.css">
     
     <style>
         :root {
@@ -26,6 +27,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            padding-top: 70px;
         }
 
         .container {
@@ -281,22 +283,6 @@
             })
             .catch(error => {
                 console.error('Erro ao carregar a navbar:', error);
-                document.getElementById('navbar-placeholder').innerHTML = `
-                    <nav class="navbar">
-                        <div class="nav-container">
-                            <a href="index.html" class="logo">
-                                <img src="assets/icons/icone.png" alt="Harvester Logo">
-                                Harvester
-                            </a>
-                            <div class="nav-links">
-                                <a href="index.html">Início</a>
-                                <a href="install_guide.html">Instalação</a>
-                                <a href="documentation.html">Documentação</a>
-                                <a href="support.html">Suporte</a>
-                            </div>
-                        </div>
-                    </nav>
-                `;
             });
     </script>
 
@@ -519,5 +505,6 @@
             alert('Mensagem enviada com sucesso!');
         });
     </script>
+    <script src="js/main.js"></script>
 </body>
 </html> 
