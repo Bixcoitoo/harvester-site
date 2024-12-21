@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harvester - Download de Músicas e Vídeos</title>
     <link rel="icon" href="assets/icons/icone.png" type="image/png">
+    <link rel="stylesheet" href="styles/navbar.css">
+  
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -25,6 +27,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            padding-top: 70px;
         }
 
         .container {
@@ -352,34 +355,22 @@
             width: 100%;
             top: 0;
             z-index: 1000;
+            height: 70px;
         }
 
         .nav-container {
             max-width: 1200px;
+            height: 100%;
             margin: 0 auto;
-            padding: 15px 20px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 1.5em;
-        }
-
-        .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 20px;
         }
 
         .nav-links a {
@@ -391,6 +382,20 @@
 
         .nav-links a:hover {
             color: var(--primary-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .logo img {
+            height: 32px;
         }
 
         /* Scroll suave para toda a página */
@@ -676,32 +681,22 @@
     </style>
 </head>
 <body>
-    <script>
-        fetch('./components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Erro ao carregar a navbar:', error);
-                document.getElementById('navbar-placeholder').innerHTML = `
-                    <nav class="navbar">
-                        <div class="nav-container">
-                            <a href="index.html" class="logo">
-                                <img src="assets/icons/icone.png" alt="Harvester Logo">
-                                Harvester
-                            </a>
-                            <div class="nav-links">
-                                <a href="index.html">Início</a>
-                                <a href="install_guide.html">Instalação</a>
-                                <a href="documentation.html">Documentação</a>
-                                <a href="support.html">Suporte</a>
-                            </div>
-                        </div>
-                    </nav>
-                `;
-            });
-    </script>
+    <div id="navbar-placeholder">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <img src="assets/icons/icone.png" alt="Harvester Logo">
+                    Harvester
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Início</a>
+                    <a href="install_guide.html">Instalação</a>
+                    <a href="documentation.html">Documentação</a>
+                    <a href="support.html">Suporte</a>
+                </div>
+            </div>
+        </nav>
+    </div>
 
     <div class="hero">
         <div class="container">
@@ -858,163 +853,59 @@
     </footer>
 
     <script>
-        // Volta ao topo quando a página é carregada/recarregada
-        window.onload = function() {
-            window.scrollTo(0, 0);
-            
-            // Verifica se é a primeira visita
-            if (!localStorage.getItem('visitedBefore')) {
-                // Mostra o modal do guia apenas na primeira visita
-                document.getElementById('installGuideModal').style.display = 'block';
-                // Marca que o usuário já visitou o site
-                localStorage.setItem('visitedBefore', 'true');
-            }
-        }
+        // Aguarda o DOM estar completamente carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageModal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalCaption = document.getElementById('modalCaption');
+            const carouselItems = document.querySelectorAll('.carousel-item img');
 
-        // Adiciona apenas o efeito de destaque
-        document.querySelector('a[href="#download"]').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Scroll suave até a seção
-            document.querySelector('#download').scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
+            if (carouselItems) {
+                carouselItems.forEach(img => {
+                    if (img) {
+                        img.style.cursor = 'pointer';
+                        img.onclick = function() {
+                            if (imageModal && modalImg && modalCaption) {
+                                imageModal.style.display = 'block';
+                                modalImg.src = this.src;
+                                modalCaption.textContent = this.alt;
+                                document.body.style.overflow = 'hidden';
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (imageModal) {
+                imageModal.onclick = function(event) {
+                    if (event.target === imageModal) {
+                        closeImageModal();
+                    }
+                }
+            }
+
+            function closeImageModal() {
+                if (modalImg && imageModal) {
+                    modalImg.classList.add('zoom-out');
+                    setTimeout(() => {
+                        imageModal.style.display = 'none';
+                        modalImg.classList.remove('zoom-out');
+                        document.body.style.overflow = 'auto';
+                    }, 300);
+                }
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    if (imageModal && imageModal.style.display === 'block') {
+                        closeImageModal();
+                    }
+                    const installGuideModal = document.getElementById('installGuideModal');
+                    if (installGuideModal && installGuideModal.style.display === 'block') {
+                        closeModal();
+                    }
+                }
             });
-
-            // Adiciona classe de animação após o scroll
-            setTimeout(() => {
-                const downloadSection = document.querySelector('#download');
-                downloadSection.classList.add('highlight-section');
-                
-                // Remove a classe após a animação
-                setTimeout(() => {
-                    downloadSection.classList.remove('highlight-section');
-                }, 800);
-            }, 500);
-        });
-
-        function handleDownload() {
-            // Usa o link direto do GitHub para download
-            window.location.href = 'https://github.com/Bixcoitoo/harvester-site/releases/download/1.0.6/HarvesterSetup.exe';
-        }
-
-        // Modal do Guia de Instalação
-        function closeModal() {
-            document.getElementById('installGuideModal').style.display = 'none';
-        }
-
-        // Fecha o modal se clicar fora dele
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('installGuideModal')) {
-                closeModal();
-            }
-        }
-
-        // Adicione este código junto com seus outros scripts
-        const carousel = document.querySelector('.carousel-inner');
-        const items = document.querySelectorAll('.carousel-item');
-        const prevButton = document.querySelector('.carousel-button.prev');
-        const nextButton = document.querySelector('.carousel-button.next');
-        
-        let currentIndex = 0;
-        const itemsPerView = 2;
-        const totalPairs = Math.floor(items.length / itemsPerView);
-        let autoPlayInterval;
-        
-        function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-        
-        function moveCarousel(direction) {
-            if (direction === 'next') {
-                currentIndex = (currentIndex + 1) % totalPairs;
-            } else {
-                currentIndex = (currentIndex - 1 + totalPairs) % totalPairs;
-            }
-            updateCarousel();
-        }
-        
-        function startAutoPlay() {
-            // Limpa qualquer intervalo existente antes de criar um novo
-            if (autoPlayInterval) {
-                clearInterval(autoPlayInterval);
-            }
-            autoPlayInterval = setInterval(() => moveCarousel('next'), 3000);
-        }
-        
-        // Inicia o autoplay imediatamente
-        startAutoPlay();
-        
-        // Mantém o autoplay mesmo quando a página não está visível
-        document.addEventListener('visibilitychange', () => {
-            startAutoPlay();
-        });
-        
-        // Botões de navegação
-        prevButton.addEventListener('click', () => {
-            moveCarousel('prev');
-        });
-        
-        nextButton.addEventListener('click', () => {
-            moveCarousel('next');
-        });
-        
-        // Inicializa o carrossel
-        updateCarousel();
-        
-        // Garante que o carrossel continue rodando mesmo em background
-        window.addEventListener('blur', () => {
-            startAutoPlay();
-        });
-        
-        window.addEventListener('focus', () => {
-            startAutoPlay();
-        });
-
-        // Modal das Imagens
-        const imageModal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        const modalCaption = document.getElementById('modalCaption');
-        const closeImageBtn = document.getElementsByClassName('modal-image-close')[0];
-
-        document.querySelectorAll('.carousel-item img').forEach(img => {
-            img.style.cursor = 'pointer';
-            img.onclick = function() {
-                imageModal.style.display = 'block';
-                modalImg.src = this.src;
-                modalCaption.textContent = this.alt;
-                document.body.style.overflow = 'hidden';
-            }
-        });
-
-        closeImageBtn.onclick = function() {
-            closeImageModal();
-        }
-
-        imageModal.onclick = function(event) {
-            if (event.target === imageModal) {
-                closeImageModal();
-            }
-        }
-
-        function closeImageModal() {
-            modalImg.classList.add('zoom-out');
-            setTimeout(() => {
-                imageModal.style.display = 'none';
-                modalImg.classList.remove('zoom-out');
-                document.body.style.overflow = 'auto';
-            }, 300);
-        }
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                if (imageModal.style.display === 'block') {
-                    closeImageModal();
-                }
-                if (document.getElementById('installGuideModal').style.display === 'block') {
-                    closeModal();
-                }
-            }
         });
     </script>
 
