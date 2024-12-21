@@ -6,6 +6,7 @@
     <title>Documentação - Harvester</title>
     <link rel="icon" href="assets/icons/icone.png" type="image/png">
     <link rel="stylesheet" href="styles/navbar.css">
+    <link rel="stylesheet" href="styles/footer.css">
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -34,220 +35,62 @@
 
         
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      
+        
 
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 1.5em;
-        }
-
-        .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Documentation Layout */
-        .docs-container {
-            display: flex;
-            margin-top: var(--navbar-height);
-            min-height: calc(100vh - var(--navbar-height));
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: var(--navbar-height);
-            left: 0;
-            width: var(--sidebar-width);
-            height: calc(100vh - var(--navbar-height));
-            background: white;
-            border-right: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-        }
-
-        .search-box {
-            position: sticky;
-            top: 0;
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid #eee;
-            z-index: 101;
-        }
-
+       
+       
+        /* Ajustes da barra de pesquisa */
         .search-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            margin: 0 15px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
         }
 
         .search-input {
             width: 100%;
-            height: 40px;
-            padding-left: 35px;
-            padding-right: 35px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             font-size: 14px;
-            line-height: 24px;
-            transition: all 0.3s ease;
-            text-overflow: ellipsis;
         }
 
-        .search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            color: #666;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            max-height: 300px;
-            overflow-y: auto;
-            margin-top: 8px;
-            z-index: 1000;
-        }
-
-        .search-result-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-
-        .search-result-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .search-result-item .result-title {
-            color: var(--primary-color);
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .search-result-item .result-context {
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .highlight-text {
-            background-color: #fff3cd;
-            padding: 2px 4px;
-            border-radius: 2px;
-        }
-
-        .search-clear {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            color: #666;
-            cursor: pointer;
-            z-index: 1;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .search-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
+        /* Ajustes da navegação lateral */
         .sidebar-nav {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 0 20px 0;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-        }
-
-        .sidebar-nav li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar-nav a {
-            display: block;
-            padding: 8px 15px;
-            color: var(--text-color);
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-nav a.active {
-            color: var(--primary-color);
-            background-color: #e8f0fe;
-            border-left-color: var(--primary-color);
+            padding: 15px;
         }
 
         .sidebar-section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .sidebar-section h3 {
-            color: #666;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            padding-left: 15px;
+            font-size: 1.1em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .sidebar-section ul {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        .sidebar-section li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95em;
+            display: block;
+            padding: 5px 0;
+        }
+
+        .sidebar-section a:hover {
+            color: var(--primary-color);
         }
 
         /* Main Content */
-        .content {
-            margin-left: var(--sidebar-width);
-            padding: 30px;
-            max-width: calc(100% - var(--sidebar-width));
-        }
-
         .doc-section {
             scroll-margin-top: 80px;
             padding: 20px 0;
@@ -320,33 +163,105 @@
 
         /* Search Bar */
         .search-box {
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid #eee;
             position: sticky;
-            top: var(--navbar-height);
-            z-index: 100;
+            top: 0;
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            z-index: 10;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 10px;
         }
 
         .search-input {
             width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
+            padding: 12px 45px 12px 45px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 0.95em;
             transition: all 0.3s ease;
+            background-color: #f8f9fa;
         }
 
         .search-input:focus {
             border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
         }
 
-        .highlight {
+        .search-icon {
+            position: absolute;
+            left: 19px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 5px;
+            color: #666;
+            display: none;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-title {
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .search-result-content {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .search-highlight {
             background-color: #fff3cd;
-            padding: 2px 0;
-            border-radius: 3px;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .no-results {
+            padding: 15px;
+            text-align: center;
+            color: #666;
         }
 
         /* Responsive Design */
@@ -493,6 +408,69 @@
                 display: flex;
             }
         }
+
+        /* Documentation Layout */
+        .docs-container {
+            display: flex;
+            gap: 30px;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: calc(var(--navbar-height) + 20px);
+            height: calc(100vh - var(--navbar-height) - 40px);
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            z-index: 10;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .docs-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            .search-box {
+                position: relative;
+            }
+
+            .content {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -504,12 +482,18 @@
         <aside class="sidebar">
             <div class="search-box">
                 <div class="search-container">
-                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <input type="text" class="search-input" placeholder="Pesquisar na documentação...">
-                    <svg class="search-clear" width="20" height="20" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                    <input type="text" 
+                           id="searchDocs" 
+                           class="search-input" 
+                           placeholder="Pesquisar na documentação..."
+                           aria-label="Pesquisar na documentação">
+                    <svg class="search-clear" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="search-results"></div>
@@ -815,6 +799,8 @@ harvester.download("https://exemplo.com/video", {
         </main>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
         fetch('./components/navbar.html')
         .then(response => response.text())
@@ -845,5 +831,122 @@ harvester.download("https://exemplo.com/video", {
         });
     </script>
     <script src="js/main.js"></script>
+    <script>
+        // Carregar o footer
+        fetch('./components/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar o footer:', error);
+            });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchDocs');
+        const searchClear = document.querySelector('.search-clear');
+        const searchResults = document.querySelector('.search-results');
+        const docSections = document.querySelectorAll('.doc-section');
+        
+        // Mostrar/ocultar botão limpar
+        searchInput.addEventListener('input', function(e) {
+            const hasValue = e.target.value.length > 0;
+            searchClear.style.display = hasValue ? 'block' : 'none';
+            searchResults.style.display = hasValue ? 'block' : 'none';
+            
+            if (hasValue) {
+                performSearch(e.target.value);
+            }
+        });
+        
+        // Limpar pesquisa
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            searchClear.style.display = 'none';
+            searchResults.style.display = 'none';
+            searchResults.innerHTML = '';
+            showAllSections();
+        });
+        
+        function performSearch(searchTerm) {
+            searchTerm = searchTerm.toLowerCase().trim();
+            const results = [];
+            
+            docSections.forEach(section => {
+                const title = section.querySelector('h2, h3')?.textContent || '';
+                const content = section.textContent;
+                
+                if (title.toLowerCase().includes(searchTerm) || 
+                    content.toLowerCase().includes(searchTerm)) {
+                    results.push({
+                        id: section.id,
+                        title: title,
+                        content: getSearchSnippet(content, searchTerm)
+                    });
+                }
+            });
+            
+            displayResults(results, searchTerm);
+        }
+        
+        function getSearchSnippet(content, searchTerm) {
+            const maxLength = 150;
+            const index = content.toLowerCase().indexOf(searchTerm);
+            let start = Math.max(0, index - 60);
+            let end = Math.min(content.length, index + 90);
+            
+            let snippet = content.slice(start, end);
+            if (start > 0) snippet = '...' + snippet;
+            if (end < content.length) snippet = snippet + '...';
+            
+            return snippet;
+        }
+        
+        function displayResults(results, searchTerm) {
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="no-results">
+                        Nenhum resultado encontrado para "${searchTerm}"
+                    </div>`;
+                return;
+            }
+            
+            searchResults.innerHTML = results.map(result => `
+                <div class="search-result-item" data-section-id="${result.id}">
+                    <div class="search-result-title">${highlightText(result.title, searchTerm)}</div>
+                    <div class="search-result-content">${highlightText(result.content, searchTerm)}</div>
+                </div>
+            `).join('');
+            
+            // Adicionar eventos de clique nos resultados
+            document.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const sectionId = item.dataset.sectionId;
+                    document.querySelector(`#${sectionId}`).scrollIntoView({ behavior: 'smooth' });
+                    searchResults.style.display = 'none';
+                });
+            });
+        }
+        
+        function highlightText(text, searchTerm) {
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+        
+        function showAllSections() {
+            docSections.forEach(section => {
+                section.style.display = 'block';
+            });
+        }
+        
+        // Fechar resultados ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-box')) {
+                searchResults.style.display = 'none';
+            }
+        });
+    });
+    </script>
 </body>
 </html> 

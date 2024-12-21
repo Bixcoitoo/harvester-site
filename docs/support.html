@@ -6,6 +6,7 @@
     <title>Suporte - Harvester</title>
     <link rel="icon" href="assets/icons/icone.png" type="image/png">
     <link rel="stylesheet" href="styles/navbar.css">
+    <link rel="stylesheet" href="styles/footer.css">
     
     <style>
         :root {
@@ -230,10 +231,6 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
         }
 
         .support-card {
@@ -565,5 +562,19 @@
         });
     </script>
     <script src="js/main.js"></script>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Carregar o footer
+        fetch('./components/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar o footer:', error);
+            });
+    </script>
 </body>
 </html> 
