@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suporte - Harvester</title>
+    <link rel="icon" href="assets/icons/icone.png" type="image/png">
+    <link rel="stylesheet" href="styles/navbar.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #1557b0;
+            --bg-color: #f8f9fa;
+            --text-color: #202124;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            margin-top: 100px;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .support-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .support-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .support-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-section {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+        }
+
+        .contact-form {
+            max-width: 800px;
+            margin: 60px auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .support-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .navbar {
+            background-color: var(--bg-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <script>
+        fetch('/docs/components/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a navbar:', error);
+                // Fallback para navbar estática
+                document.getElementById('navbar-placeholder').innerHTML = `
+                    <nav class="navbar">
+                        <div class="nav-container">
+                            <a href="index.html" class="logo">
+                                <img src="assets/icons/icone.png" alt="Harvester Logo">
+                                Harvester
+                            </a>
+                            <div class="nav-links">
+                                <a href="index.html">Início</a>
+                                <a href="install_guide.html">Instalação</a>
+                                <a href="documentation.html">Documentação</a>
+                                <a href="support.html">Suporte</a>
+                            </div>
+                        </div>
+                    </nav>
+                `;
+            });
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <h1>Central de Suporte</h1>
+            <p>Como podemos ajudar você hoje?</p>
+        </div>
+
+        <div class="support-grid">
+            <div class="support-card">
+                <h3>📚 Documentação</h3>
+                <p>Acesse nossa documentação completa com guias detalhados e tutoriais.</p>
+            </div>
+
+            <div class="support-card">
+                <h3>❓ FAQ</h3>
+                <p>Encontre respostas para as perguntas mais frequentes.</p>
+            </div>
+
+            <div class="support-card">
+                <h3>🐛 Reportar Bug</h3>
+                <p>Encontrou um problema? Reporte para nossa equipe.</p>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Perguntas Frequentes</h2>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Como faço para atualizar o Harvester?
+                    <span class="toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    O Harvester verifica automaticamente por atualizações ao iniciar. Caso haja uma nova versão disponível, você será notificado.
+                </div>
+            </div>
+            <!-- Adicione mais itens FAQ conforme necessário -->
+        </div>
+
+        <div class="contact-form">
+            <h2>Entre em Contato</h2>
+            <form id="supportForm">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Assunto</label>
+                    <input type="text" id="subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Mensagem</label>
+                    <textarea id="message" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Enviar Mensagem</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle FAQ
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                question.querySelector('.toggle').textContent = 
+                    item.classList.contains('active') ? '-' : '+';
+            });
+        });
+
+        // Form submission
+        document.getElementById('supportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Adicione aqui a lógica para enviar o formulário
+            alert('Mensagem enviada com sucesso!');
+        });
+    </script>
+</body>
+</html> 

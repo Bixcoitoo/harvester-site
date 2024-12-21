@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - Harvester</title>
+    <link rel="icon" href="assets/icons/icone.png" type="image/png">
+    <link rel="stylesheet" href="styles/navbar.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #1557b0;
+            --bg-color: #f8f9fa;
+            --text-color: #202124;
+            --sidebar-width: 280px;
+            --navbar-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: var(--bg-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Documentation Layout */
+        .docs-container {
+            display: flex;
+            margin-top: var(--navbar-height);
+            min-height: calc(100vh - var(--navbar-height));
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            padding: 30px;
+            position: fixed;
+            height: calc(100vh - var(--navbar-height));
+            overflow-y: auto;
+            border-right: 1px solid #eee;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #e8f0fe;
+            color: var(--primary-color);
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            max-width: calc(100% - var(--sidebar-width));
+        }
+
+        .doc-section {
+            max-width: 800px;
+            margin-bottom: 60px;
+        }
+
+        .doc-section h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .doc-section h2 {
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .doc-section h3 {
+            margin: 30px 0 15px;
+            color: var(--secondary-color);
+        }
+
+        .doc-section p {
+            margin-bottom: 15px;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        /* Tables */
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .doc-table th,
+        .doc-table td {
+            padding: 12px;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+
+        .doc-table th {
+            background: #f5f5f5;
+        }
+
+        /* Notes and Warnings */
+        .note, .warning {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .note {
+            background: #e8f0fe;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+
+        /* Search Bar */
+        .search-box {
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include navbar -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Documentation Container -->
+    <div class="docs-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Pesquisar na documentação...">
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3>Introdução</h3>
+                    <ul>
+                        <li><a href="#getting-started" class="active">Começando</a></li>
+                        <li><a href="#installation">Instalação</a></li>
+                        <li><a href="#quick-start">Guia Rápido</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Funcionalidades</h3>
+                    <ul>
+                        <li><a href="#basic-usage">Uso Básico</a></li>
+                        <li><a href="#advanced-features">Recursos Avançados</a></li>
+                        <li><a href="#configurations">Configurações</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Tutoriais</h3>
+                    <ul>
+                        <li><a href="#video-download">Download de Vídeos</a></li>
+                        <li><a href="#audio-download">Download de Áudio</a></li>
+                        <li><a href="#playlist-download">Download de Playlists</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Referência</h3>
+                    <ul>
+                        <li><a href="#api-reference">API</a></li>
+                        <li><a href="#cli-commands">Comandos CLI</a></li>
+                        <li><a href="#error-codes">Códigos de Erro</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <section id="getting-started" class="doc-section">
+                <h1>Documentação do Harvester</h1>
+                <p>Bem-vindo à documentação oficial do Harvester. Aqui você encontrará tudo o que precisa saber para utilizar o software de forma eficiente.</p>
+
+                <div class="note">
+                    <h3>📝 Nota</h3>
+                    <p>Esta documentação está em constante atualização. Certifique-se de estar usando a versão mais recente do Harvester.</p>
+                </div>
+
+                <h2>Visão Geral</h2>
+                <p>O Harvester é uma ferramenta moderna para download de conteúdo multimídia, oferecendo uma interface intuitiva e recursos avançados.</p>
+
+                <h3>Recursos Principais</h3>
+                <ul>
+                    <li>Download de vídeos em alta qualidade</li>
+                    <li>Extração de áudio</li>
+                    <li>Suporte a múltiplas plataformas</li>
+                    <li>Interface gráfica intuitiva</li>
+                </ul>
+
+                <h2>Requisitos do Sistema</h2>
+                <table class="doc-table">
+                    <tr>
+                        <th>Componente</th>
+                        <th>Requisito Mínimo</th>
+                    </tr>
+                    <tr>
+                        <td>Sistema Operacional</td>
+                        <td>Windows 7 ou superior</td>
+                    </tr>
+                    <tr>
+                        <td>Memória RAM</td>
+                        <td>2GB</td>
+                    </tr>
+                    <tr>
+                        <td>Espaço em Disco</td>
+                        <td>100MB + espaço para downloads</td>
+                    </tr>
+                </table>
+
+                <h2>Exemplo de Uso</h2>
+                <div class="code-block">
+                    <pre><code>// Exemplo básico de uso
+harvester.download("https://exemplo.com/video", {
+    format: "mp4",
+    quality: "high"
+});</code></pre>
+                </div>
+
+                <div class="warning">
+                    <h3>⚠️ Aviso</h3>
+                    <p>Certifique-se de ter permissão para baixar o conteúdo. O Harvester não se responsabiliza pelo uso indevido.</p>
+                </div>
+            </section>
+
+            <!-- Adicione mais seções conforme necessário -->
+        </main>
+    </div>
+
+    <script>
+        // Carrega a navbar com caminho absoluto
+        fetch('/docs/components/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a navbar:', error);
+                // Fallback para navbar estática em caso de erro
+                document.getElementById('navbar-placeholder').innerHTML = `
+                    <nav class="navbar">
+                        <div class="nav-container">
+                            <a href="index.html" class="logo">
+                                <img src="assets/icons/icone.png" alt="Harvester Logo">
+                                Harvester
+                            </a>
+                            <div class="nav-links">
+                                <a href="index.html">Início</a>
+                                <a href="install_guide.html">Instalação</a>
+                                <a href="documentation.html">Documentação</a>
+                                <a href="support.html">Suporte</a>
+                            </div>
+                        </div>
+                    </nav>
+                `;
+            });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Implement search logic here
+        });
+
+        // Active link tracking
+        const links = document.querySelectorAll('.sidebar-nav a');
+        links.forEach(link => {
+            link.addEventListener('click', function() {
+                links.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Responsive sidebar
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+    </script>
+</body>
+</html> 
