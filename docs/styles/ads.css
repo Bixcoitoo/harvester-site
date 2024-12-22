@@ -1,0 +1,36 @@
+.ad-container {
+    margin: 20px auto;
+    text-align: center;
+    min-height: 250px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.ad-blocked-message {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-ad {
+    margin: 20px 0;
+    padding: 10px;
+}
+
+.content-ad {
+    max-width: 100%;
+    overflow: hidden;
+    margin: 30px auto;
+}
+
+@media (max-width: 768px) {
+    .sidebar-ad {
+        display: none; /* Oculta anúncios da sidebar no mobile */
+    }
+    
+    .content-ad {
+        margin: 20px auto;
+    }
+} 
