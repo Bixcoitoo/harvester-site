@@ -1,0 +1,61 @@
+/* Efeito de brilho para cards */
+.feature-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255,255,255,0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: transform 0.6s ease;
+    z-index: -1;
+}
+
+.feature-card:hover::after {
+    transform: rotate(45deg) translate(50%, 50%);
+}
+
+/* Animações de transição */
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+.zoom-out {
+    animation: zoomOut 0.3s ease-out;
+}
+
+.zoom-in {
+    animation: zoomIn 0.3s ease-out;
+}
+
+/* Transições suaves */
+.carousel-inner,
+.feature-card,
+.download-btn,
+.screenshot-card {
+    transition: all 0.3s ease;
+} 

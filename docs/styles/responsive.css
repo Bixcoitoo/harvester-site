@@ -1,0 +1,84 @@
+@media (max-width: 768px) {
+    .carousel {
+        max-width: 100%;
+    }
+
+    .carousel-item {
+        min-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .carousel-item img {
+        max-height: 250px;
+    }
+
+    
+
+    .support-card {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .faq-container {
+        padding: 15px;
+    }
+
+    .installation-steps {
+        padding: 15px;
+    }
+    
+    .step-card {
+        flex-direction: column;
+    }
+    
+    .step-image {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    /* Ajustes de texto */
+    body {
+        font-size: 16px;
+    }
+    
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.5em; }
+    
+    .section-padding {
+        padding: var(--spacing-mobile) 0;
+    }
+
+    .screenshots-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 2.5em;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+    }
+}
+
+/* Ajustes específicos para telas muito pequenas */
+@media (max-width: 480px) {
+    .carousel-item img {
+        min-height: 300px;
+        object-fit: contain;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    .hero h1 {
+        font-size: 2em;
+    }
+
+    .feature-card {
+        margin: 10px 0;
+    }
+} 

@@ -156,45 +156,8 @@
     }
 }
 
-/* Grid system responsivo */
-.grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
 
-/* Containers flexíveis */
-.flex-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
 
-/* Imagens responsivas */
-.responsive-img {
-    max-width: 100%;
-    height: auto;
-}
 
-/* Ajustes para texto */
-@media (max-width: 768px) {
-    h1 { font-size: 2em; }
-    h2 { font-size: 1.8em; }
-    h3 { font-size: 1.5em; }
-    body { font-size: 16px; }
-}
 
-/* Ajustes para sidebar */
-@media (max-width: 1024px) {
-    .sidebar {
-        width: 240px;
-    }
-}
 
-@media (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        left: -100%;
-        width: 100%;
-    }
-} 

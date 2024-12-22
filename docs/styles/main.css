@@ -1,0 +1,90 @@
+:root {
+    --primary-color: #1a73e8;
+    --secondary-color: #1557b0;
+    --bg-color: #f8f9fa;
+    --text-color: #202124;
+    --navbar-height: 70px;
+    --container-width: 1200px;
+    --mobile-breakpoint: 768px;
+    --tablet-breakpoint: 1024px;
+    --spacing-mobile: 15px;
+    --spacing-tablet: 20px;
+    --spacing-desktop: 30px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding-top: 70px;
+    font-size: 16px;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    color: var(--text-color);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Imagens responsivas globais */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ajustes de texto responsivos */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+    
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.5em; }
+    
+    .section-padding {
+        padding: var(--spacing-mobile) 0;
+    }
+} 
+
+.how-to {
+    padding: 80px 0;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.screenshots {
+    padding: 80px 0;
+    background-color: var(--bg-color);
+}
+
+.screenshots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
