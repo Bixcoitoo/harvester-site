@@ -13,7 +13,7 @@
             --secondary-color: #1557b0;
             --bg-color: #f8f9fa;
             --text-color: #202124;
-            --navbar-height: 70px;
+            --navbar-height: 45px;
             --container-width: 1200px;
             --mobile-breakpoint: 768px;
             --tablet-breakpoint: 1024px;
@@ -30,7 +30,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            padding-top: var(--navbar-height);
+            padding-top: 0;
         }
 
         
@@ -365,7 +365,7 @@
 
         /* Ajuste para o primeiro título não ficar coberto */
         .doc-section:first-child {
-            padding-top: 20px;
+            padding-top: 10px;
         }
 
         @media (max-width: 768px) {
@@ -412,24 +412,21 @@
         /* Documentation Layout */
         .docs-container {
             display: flex;
-            gap: 30px;
+            gap: 20px;
             max-width: var(--container-width);
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
             position: relative;
-            margin-top: 20px;
         }
 
         .sidebar {
             width: 280px;
-            flex-shrink: 0;
             position: sticky;
-            top: calc(var(--navbar-height) + 20px);
-            height: calc(100vh - var(--navbar-height) - 40px);
+            top: var(--navbar-height);
+            height: calc(100vh - var(--navbar-height));
             overflow-y: auto;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-right: 1px solid #eee;
         }
 
         .search-box {
@@ -445,22 +442,28 @@
             flex: 1;
             background: white;
             border-radius: 8px;
-            padding: 30px;
+            padding: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 0;
         }
 
         @media (max-width: 768px) {
+            body {
+                padding-top: 45px;
+            }
+
             .docs-container {
                 flex-direction: column;
-                padding: 10px;
+                padding: 5px;
+                gap: 5px;
             }
 
             .sidebar {
+                display: none;
                 width: 100%;
-                position: relative;
-                top: 0;
+                position: static;
                 height: auto;
-                margin-bottom: 20px;
+                border-right: none;
             }
 
             .search-box {
@@ -469,6 +472,27 @@
 
             .content {
                 width: 100%;
+                padding: 5px;
+                margin-top: 0;
+            }
+
+            .doc-section:first-child {
+                margin-top: 0;
+                padding-top: 5px;
+            }
+
+            .doc-section h1 {
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .docs-container {
+                padding: 5px;
+            }
+
+            .content {
+                padding: 10px;
             }
         }
     </style>

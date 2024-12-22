@@ -14,7 +14,7 @@
             --secondary-color: #1557b0;
             --bg-color: #f8f9fa;
             --text-color: #202124;
-            --navbar-height: 70px;
+            --navbar-height: 45px;
             --container-width: 1200px;
             --mobile-breakpoint: 768px;
             --tablet-breakpoint: 1024px;
@@ -30,17 +30,13 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            padding-top: 70px;
+            padding-top: 45px;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            margin-top: 100px;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 10px;
         }
 
         .header {
@@ -180,12 +176,31 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
+            body {
+                padding-top: 45px;
             }
-            
-            .support-grid {
-                grid-template-columns: 1fr;
+
+            .container {
+                padding: 10px;
+                margin-top: 0;
+            }
+
+            h1 {
+                margin-top: 0;
+            }
+
+            .support-card {
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 40px;
+            }
+
+            .container {
+                padding: 8px;
             }
         }
 
@@ -306,6 +321,74 @@
             .card-icon {
                 font-size: 2em;
             }
+        }
+
+        /* Estilos do Slider */
+        .screenshot-slider {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .screenshot-container {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .screenshot-item {
+            min-width: 100%;
+            padding: 0 10px;
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: var(--primary-color);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .slider-prev {
+            left: 10px;
+        }
+
+        .slider-next {
+            right: 10px;
         }
     </style>
 </head>
@@ -575,6 +658,52 @@
             .catch(error => {
                 console.error('Erro ao carregar o footer:', error);
             });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.screenshot-container');
+        const items = document.querySelectorAll('.screenshot-item');
+        const dotsContainer = document.querySelector('.slider-dots');
+        let currentIndex = 0;
+
+        // Criar dots para navegação
+        items.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        function goToSlide(index) {
+            currentIndex = index;
+            container.style.transform = `translateX(-${index * 100}%)`;
+            updateDots();
+        }
+
+        function updateDots() {
+            document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Navegação com setas
+        document.querySelector('.slider-prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            goToSlide(currentIndex);
+        });
+
+        document.querySelector('.slider-next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % items.length;
+            goToSlide(currentIndex);
+        });
+
+        // Auto-play opcional
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % items.length;
+            goToSlide(currentIndex);
+        }, 5000);
+    });
     </script>
 </body>
 </html> 
