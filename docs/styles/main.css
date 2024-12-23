@@ -321,7 +321,7 @@ img {
 }
 
 .highlight {
-    color: var(--primary-color);
+    color: white;
     text-decoration: none;
     font-weight: bold;
 }
