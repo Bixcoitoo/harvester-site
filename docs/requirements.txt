@@ -5,8 +5,8 @@ redis==4.6.0
 requests==2.31.0
 python-dotenv==1.0.0
 yt-dlp==1.16
-fastapi==0.109.2
-uvicorn==0.27.1
+fastapi>=0.68.0,<0.69.0
+uvicorn>=0.15.0,<0.16.0
 celery
 rich
 coloredlogs
