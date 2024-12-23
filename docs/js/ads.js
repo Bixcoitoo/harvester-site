@@ -53,4 +53,28 @@ function verificarAds() {
             posição: ad.getBoundingClientRect()
         });
     });
-} 
+}
+
+// Melhor tratamento para AdSense
+window.addEventListener('load', function() {
+    try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+        console.log('AdBlock detectado');
+        // Mostra mensagem alternativa
+        document.querySelectorAll('.ad-notice').forEach(notice => {
+            notice.style.display = 'block';
+        });
+    }
+});
+
+// Desativa mensagens de erro do AdSense
+window.onerror = function(msg, url, line, col, error) {
+    if (msg.includes('message channel closed') || 
+        msg.includes('css_text') || 
+        url.includes('ads') || 
+        url.includes('anchor') || 
+        url.includes('aframe')) {
+        return true; // Suprime esses erros
+    }
+}; 

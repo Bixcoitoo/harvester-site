@@ -15,8 +15,23 @@
     <link rel="stylesheet" href="styles/screenshots.css">
     <link rel="stylesheet" href="styles/animations.css">
     <link rel="stylesheet" href="styles/responsive.css">
-    <script src="js/ads.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6494012448662315" crossorigin="anonymous"></script>
+    <script async src="js/ads.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6494012448662315" 
+            crossorigin="anonymous"
+            onerror="document.querySelectorAll('.ad-notice').forEach(n => n.style.display = 'block');">
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="js/downloader.js" defer></script>
+    <script src="js/config.js"></script>
+    <script src="js/fingerprint.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script>
+        window.onloadCallback = function() {
+            grecaptcha.render('captcha', {
+                'sitekey': config.RECAPTCHA_SITE_KEY
+            });
+        };
+    </script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
@@ -24,10 +39,67 @@
     <div class="hero">
         <div class="container">
             <h1>Harvester</h1>
-            <p>O melhor downloader de músicas e vídeos do YouTube, Spotify e Deezer</p>
-            <a href="#download" class="download-btn">Download Grátis</a>
+            <div class="hero-content">
+                <div class="download-options-text">
+                    <h2>Escolha como baixar:</h2>
+                    <div class="option-card">
+                        <h3>🌐 Download Online</h3>
+                        <p>Use diretamente pelo site. Rápido, sem instalação, mas com algumas limitações.</p>
+                    </div>
+                    <div class="option-card highlight">
+                        <h3>💻 Programa Completo</h3>
+                        <p>Baixe o programa e tenha acesso a todos os recursos sem limitações!</p>
+                    </div>
+                </div>
+                <a href="#download" class="cta-button">Download Grátis do Programa</a>
+            </div>
         </div>
     </div>
+
+    <!-- Nova seção de download online -->
+    <section class="online-downloader">
+        <div class="container">
+            <h2>Harvester download Online</h2>
+            <div class="download-form">
+                <input type="url" id="videoUrl" 
+                    placeholder="Cole o link do YouTube aqui" 
+                    class="url-input">
+                
+                <div class="download-options">
+                    <select id="formatType" class="format-select">
+                        <option value="mp3">MP3 (Áudio)</option>
+                        <option value="mp4">MP4 (Vídeo)</option>
+                    </select>
+                    
+                    <select id="quality" class="quality-select">
+                        <option value="high">Alta Qualidade</option>
+                        <option value="medium">Média Qualidade</option>
+                    </select>
+                </div>
+
+                <div id="captcha"></div>
+
+                <button onclick="startDownload()" class="download-action-btn">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                    </svg>
+                    Baixar
+                </button>
+
+                <!-- Novo elemento para o contador -->
+                <div class="download-limits">
+                    <div class="download-counter">
+                        Downloads restantes: <span id="downloadsCount">-/-</span>
+                    </div>
+                    <p class="limit-notice">
+                        Limite diário: 20 downloads. Para downloads ilimitados, 
+                        <a href="#download" class="highlight">baixe o programa desktop</a>.
+                    </p>
+                </div>
+            </div>
+            <div id="download-status" class="status-message"></div>
+        </div>
+    </section>
 
     <div class="ad-container">
         <ins class="adsbygoogle"
@@ -177,6 +249,20 @@
     </div>
 
     <div id="footer-placeholder"></div>
+
+    <div id="console-terminal" class="terminal-container">
+        <div class="terminal-header">
+            <span class="terminal-title">Console do Harvester</span>
+            <span class="terminal-close">&times;</span>
+        </div>
+        <div class="terminal-content">
+            <div class="terminal-output"></div>
+            <div class="terminal-input-line">
+                <span class="terminal-prompt">></span>
+                <input type="text" class="terminal-input" autofocus>
+            </div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
     <script src="js/carousel.js"></script>

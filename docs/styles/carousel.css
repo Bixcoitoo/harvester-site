@@ -1,28 +1,22 @@
 .carousel {
     position: relative;
     width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
     overflow: hidden;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    user-select: none;
-    touch-action: pan-y pinch-zoom;
+    margin: 20px 0;
 }
 
 .carousel-inner {
     display: flex;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-    width: 100%;
+    transition: transform 0.5s ease;
 }
 
 .carousel-item {
-    min-width: 50%;
-    padding: 0 10px;
-    box-sizing: border-box;
-    flex: 0 0 50%;
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .carousel-item img {
@@ -30,35 +24,20 @@
     height: auto;
     max-height: 400px;
     object-fit: contain;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    background-color: white;
-}
-
-.carousel-item p {
-    margin-top: 10px;
-    text-align: center;
-    color: var(--text-color);
-    font-size: 1em;
+    border-radius: 8px;
 }
 
 .carousel-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(26,115,232,0.8);
+    background: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
-    padding: 15px;
+    padding: 10px 15px;
     cursor: pointer;
+    z-index: 2;
     border-radius: 50%;
-    font-size: 18px;
-    z-index: 10;
-    transition: background 0.3s ease;
-}
-
-.carousel-button:hover {
-    background: rgba(26,115,232,1);
 }
 
 .carousel-button.prev {
@@ -69,46 +48,17 @@
     right: 10px;
 }
 
-/* Ajuste para telas menores */
 @media (max-width: 768px) {
-    .carousel {
-        max-width: 100%;
-        padding: 0;
+    .carousel-inner {
+        display: flex;
+        flex-wrap: nowrap;
     }
-    
+
     .carousel-item {
-        min-width: 100%;
         flex: 0 0 100%;
-        padding: 0;
-    }
-    
-    .carousel-item img {
-        max-height: none;
         width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-    
-    .carousel-item p {
-        margin-top: 10px;
-        font-size: 1.1em;
-    }
-    
-    .carousel-button {
-        padding: 15px;
-        font-size: 24px;
     }
 }
-
-/* Ajuste para telas muito pequenas */
-@media (max-width: 480px) {
-    .carousel-item img {
-        min-height: 300px;
-        object-fit: contain;
-    }
-}
-
-/* Resto dos estilos do carrossel do index.html linhas 619-663 */ 
 
 .carousel-indicators {
     position: absolute;
