@@ -63,11 +63,14 @@ async function updateDownloadsCount() {
             headers: {
                 'User-Id': userId,
                 'Accept': 'application/json'
-            }
+            },
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
@@ -75,6 +78,7 @@ async function updateDownloadsCount() {
             `Downloads restantes: ${data.remaining}/${data.total}`;
     } catch (error) {
         console.error('Erro ao atualizar contador:', error);
+        document.querySelector('.downloads-remaining').textContent = 'Erro ao carregar downloads restantes';
     }
 }
 
