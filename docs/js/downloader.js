@@ -1,41 +1,9 @@
-let captchaToken = null;
-
-// Inicializa reCAPTCHA
-function initRecaptcha() {
-    try {
-        grecaptcha.render('g-recaptcha', {
-            'sitekey': API_CONFIG.SITE_KEY,
-            'callback': (token) => {
-                captchaToken = token;
-            }
-        });
-    } catch (error) {
-        console.error('Erro ao inicializar reCAPTCHA:', error);
-    }
-}
-
-async function updateDownloadsCount() {
-    try {
-        const response = await fetch(`${API_CONFIG.URL}/api/downloads/remaining`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Canvas-Fingerprint': await getFingerprint()
-            }
-        });
-        
-        if (!response.ok) throw new Error('Erro ao obter downloads restantes');
-        
-        const data = await response.json();
-        document.getElementById('downloads-count').textContent = 
-            `${data.remaining}/${data.total} downloads restantes`;
-    } catch (error) {
-        console.error('Erro ao atualizar contador:', error);
-    }
-}
+const API_URL = 'https://harvester-api-three.vercel.app/api';
 
 async function handleDownload() {
     const url = document.getElementById('videoUrl').value;
-    const format = document.querySelector('input[name="format"]:checked').value;
+    const format = document.getElementById('formatType').value;
+    const quality = document.getElementById('quality').value;
     const statusElement = document.getElementById('download-status');
 
     if (!url) {
@@ -43,48 +11,73 @@ async function handleDownload() {
         return;
     }
 
-    if (!captchaToken) {
-        statusElement.textContent = 'Por favor, complete o reCAPTCHA';
-        return;
-    }
-
     try {
         statusElement.textContent = 'Iniciando download...';
         
-        const response = await fetch(`${API_CONFIG.URL}/api/download`, {
+        const response = await fetch(`${API_URL}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Canvas-Fingerprint': await getFingerprint()
             },
-            body: JSON.stringify({ 
-                url, 
-                format,
-                recaptchaToken: captchaToken 
-            })
+            body: JSON.stringify({ url, format, quality })
         });
 
-        const data = await response.json();
-        
         if (!response.ok) {
-            throw new Error(data.error || 'Erro ao iniciar download');
+            const error = await response.json();
+            throw new Error(error.error || 'Erro ao iniciar download');
         }
 
-        statusElement.textContent = 'Download iniciado! Aguarde...';
+        const data = await response.json();
+        statusElement.textContent = 'Download iniciado! Aguardando processamento...';
+        
+        // Inicia verificação de status
         checkDownloadStatus(data.downloadId);
-        updateDownloadsCount();
         
     } catch (error) {
         statusElement.textContent = `Erro: ${error.message}`;
         console.error('Erro:', error);
-    } finally {
-        grecaptcha.reset();
-        captchaToken = null;
     }
 }
 
-// Inicializa quando a página carregar
-document.addEventListener('DOMContentLoaded', () => {
-    updateDownloadsCount();
-    initRecaptcha();
-});
+async function checkDownloadStatus(downloadId) {
+    const statusElement = document.getElementById('download-status');
+    
+    try {
+        const response = await fetch(`${API_URL}/download/${downloadId}/status`);
+        const data = await response.json();
+
+        if (data.status === 'completed') {
+            statusElement.textContent = 'Download concluído!';
+            // Inicia o download do arquivo
+            window.location.href = `${API_URL}/download/${downloadId}/file`;
+            updateDownloadsCount();
+        } else if (data.status === 'error') {
+            statusElement.textContent = `Erro: ${data.error}`;
+        } else {
+            statusElement.textContent = `Progresso: ${data.progress}%`;
+            setTimeout(() => checkDownloadStatus(downloadId), 1000);
+        }
+    } catch (error) {
+        statusElement.textContent = 'Erro ao verificar status do download';
+        console.error('Erro:', error);
+    }
+}
+
+async function updateDownloadsCount() {
+    try {
+        const response = await fetch(`${API_URL}/downloads/remaining`, {
+            headers: {
+                'Canvas-Fingerprint': await getFingerprint()
+            }
+        });
+        const data = await response.json();
+        document.getElementById('downloadsCount').textContent = 
+            `${data.remaining}/${data.total}`;
+    } catch (error) {
+        console.error('Erro ao atualizar contador:', error);
+    }
+}
+
+// Atualiza contador ao carregar a página
+document.addEventListener('DOMContentLoaded', updateDownloadsCount);
