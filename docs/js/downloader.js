@@ -27,7 +27,9 @@ function onCaptchaExpired() {
     showCaptchaMessage('O captcha expirou. Por favor, complete novamente.', true);
 }
 
-const API_URL = 'http://localhost:5001';
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5001'
+    : 'https://harvester-api-42f53e6844e5.herokuapp.com';
 
 // Aumenta o intervalo de atualização para 60 segundos
 const COUNTER_UPDATE_INTERVAL = 60000; // 60 segundos
@@ -305,7 +307,7 @@ class TerminalConsole {
         this.username = '';
         this.loginStep = 0;
         this.tempUsername = '';
-        this.API_URL = 'http://localhost:5001';
+        this.API_URL = 'http://seu-servidor:5001';
         this.authToken = '';
         this.updateInterval = null;
         
