@@ -20,10 +20,10 @@
             crossorigin="anonymous"
             onerror="document.querySelectorAll('.ad-notice').forEach(n => n.style.display = 'block');">
     </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script src="js/config.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js?onload=initRecaptcha&render=explicit" async defer></script>
-    <script src="js/fingerprint.js"></script>
     <script src="js/downloader.js"></script>
+    <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="js/downloader.js"></script>
@@ -56,16 +56,43 @@
         <div class="container">
             <h2>Harvester download Online</h2>
             <div class="download-form">
-                <input type="text" id="videoUrl" placeholder="Cole a URL do vídeo aqui">
-                <div class="format-options">
-                    <input type="radio" name="format" value="mp3" checked> MP3
-                    <input type="radio" name="format" value="mp4"> MP4
+                <input type="url" id="videoUrl" 
+                    placeholder="Cole o link do YouTube aqui" 
+                    class="url-input">
+                
+                <div class="download-options">
+                    <select id="formatType" class="format-select">
+                        <option value="mp3">MP3 (Áudio)</option>
+                        <option value="mp4">MP4 (Vídeo)</option>
+                    </select>
+                    
+                    <select id="quality" class="quality-select">
+                        <option value="high">Alta Qualidade</option>
+                        <option value="medium">Média Qualidade</option>
+                    </select>
                 </div>
-                <div id="g-recaptcha"></div>
-                <button onclick="handleDownload()">Baixar</button>
-                <div id="download-status"></div>
-                <div id="downloads-count"></div>
+
+                <div id="captcha"></div>
+
+                <button onclick="handleDownload()" class="download-action-btn">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                    </svg>
+                    Baixar
+                </button>
+
+                <!-- Novo elemento para o contador -->
+                <div class="download-limits">
+                    <div class="download-counter">
+                        Downloads restantes: <span id="downloadsCount">-/-</span>
+                    </div>
+                    <p class="limit-notice">
+                        Limite diário: 20 downloads. Para downloads ilimitados, 
+                        <a href="#download" class="highlight">baixe o programa desktop</a>.
+                    </p>
+                </div>
             </div>
+            <div id="download-status" class="status-message"></div>
         </div>
     </section>
 
