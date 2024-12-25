@@ -108,3 +108,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 }); 
+
+function showGuideModal() {
+    const modal = document.getElementById('downloadGuideModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+function downloadProgram() {
+    const downloadUrl = 'https://github.com/bixcoitoo/Harvester/releases/latest/download/Harvester.Setup.exe';
+    window.location.href = downloadUrl;
+    
+    // Fecha o modal após iniciar o download
+    setTimeout(() => {
+        const modal = document.getElementById('downloadGuideModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }, 1000);
+} 

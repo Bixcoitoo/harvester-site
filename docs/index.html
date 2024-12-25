@@ -20,10 +20,12 @@
             crossorigin="anonymous"
             onerror="document.querySelectorAll('.ad-notice').forEach(n => n.style.display = 'block');">
     </script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script src="js/config.js"></script>
+
     <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="js/downloader.js"></script>
 </head>
 <body>
@@ -72,12 +74,14 @@
 
                 <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
 
-                <button onclick="handleDownload()" class="download-action-btn">
-                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
-                    </svg>
-                    Baixar
-                </button>
+                <button 
+                onclick="handleUrlDownload()" 
+                class="online-download-btn">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                </svg>
+                Baixar
+            </button>
 
                 <!-- Novo elemento para o contador -->
                 <div class="download-limits">
@@ -256,6 +260,44 @@
             </div>
         </div>
     </div>
+
+    <div class="g-recaptcha" data-sitekey="SEU_SITE_KEY_AQUI"></div>
+
+    <div class="progress-container" style="display: none;">
+        <div class="progress-bar"></div>
+        <div class="progress-text">0%</div>
+    </div>
+
+    <div class="downloads-remaining">Downloads restantes: -/-</div>
+
+    <style>
+    .progress-container {
+        width: 100%;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        width: 0%;
+        height: 20px;
+        background-color: #4CAF50;
+        transition: width 0.3s ease-in-out;
+    }
+
+    .progress-text {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    .downloads-remaining {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+    </style>
 
     <script src="js/main.js"></script>
     <script src="js/carousel.js"></script>

@@ -1,90 +1,109 @@
-async function handleDownload() {
-    const url = document.getElementById('videoUrl').value;
-    const format = document.getElementById('formatType').value;
-    const statusElement = document.getElementById('download-status');
-    const recaptchaResponse = grecaptcha.getResponse();
-
-    if (!url) {
-        statusElement.textContent = 'Por favor, insira uma URL válida';
-        return;
+// Função para gerar ID único do usuário
+function generateUserId() {
+    if (localStorage.getItem('userId')) {
+        return localStorage.getItem('userId');
     }
+    
+    const userId = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    localStorage.setItem('userId', userId);
+    return userId;
+}
 
-    if (!recaptchaResponse) {
-        statusElement.textContent = 'Por favor, complete o reCAPTCHA';
-        return;
-    }
-
+async function handleUrlDownload() {
     try {
-        statusElement.textContent = 'Iniciando download...';
-        
+        const url = document.querySelector('.url-input').value;
+        const format = document.querySelector('input[name="format"]:checked')?.value || 'mp3';
+        const userId = generateUserId();
+
+        // Validação básica da URL
+        if (!url) {
+            throw new Error('URL é obrigatória');
+        }
+
+        // Validar se é uma URL do YouTube ou SoundCloud
+        if (!url.includes('youtube.com') && !url.includes('youtu.be') && !url.includes('soundcloud.com')) {
+            throw new Error('URL inválida. Apenas YouTube e SoundCloud são suportados.');
+        }
+
+        document.querySelector('.progress-container').style.display = 'block';
+        document.querySelector('.progress-bar').style.width = '0%';
+        document.querySelector('.progress-text').textContent = 'Iniciando...';
+
         const response = await fetch('https://harvester-api-three.vercel.app/api/download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Canvas-Fingerprint': await getFingerprint()
+                'User-Id': userId
             },
             body: JSON.stringify({ 
-                url, 
-                format,
-                recaptchaToken: recaptchaResponse 
+                url: url.trim(),
+                format: format
             })
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
-            throw new Error(data.error || 'Erro ao iniciar download');
+            const error = await response.json();
+            throw new Error(error.error || 'Erro ao processar download');
         }
 
-        if (!data.downloadId) {
-            throw new Error('ID do download não recebido');
-        }
-
-        await checkDownloadStatus(data.downloadId);
-        
-    } catch (error) {
-        statusElement.textContent = `Erro: ${error.message}`;
-        console.error('Erro:', error);
-    } finally {
-        grecaptcha.reset();
-    }
-}
-
-async function checkDownloadStatus(downloadId) {
-    const statusElement = document.getElementById('download-status');
-    
-    try {
-        const response = await fetch(`https://harvester-api-three.vercel.app/api/download/${downloadId}/status`);
         const data = await response.json();
-        
-        if (data.status === 'completed') {
-            window.location.href = `https://harvester-api-three.vercel.app/api/download/${downloadId}/file`;
-            updateDownloadsCount();
-        } else if (data.status === 'error') {
-            statusElement.textContent = `Erro: ${data.error}`;
-        } else {
-            statusElement.textContent = `Progresso: ${data.progress}%`;
-            setTimeout(() => checkDownloadStatus(downloadId), 1000);
-        }
+        startProgressMonitoring(data.downloadId);
+        updateDownloadsCount();
     } catch (error) {
-        statusElement.textContent = 'Erro ao verificar status do download';
+        document.querySelector('.progress-text').textContent = `Erro: ${error.message}`;
+        console.error('Erro:', error);
     }
 }
 
 async function updateDownloadsCount() {
     try {
-        const response = await fetch(`${API_CONFIG.URL}/downloads/remaining`, {
+        const userId = generateUserId();
+        const response = await fetch('https://harvester-api-three.vercel.app/api/downloads/remaining', {
+            method: 'GET',
             headers: {
-                'Canvas-Fingerprint': await getFingerprint()
+                'User-Id': userId,
+                'Accept': 'application/json'
             }
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
-        document.getElementById('downloadsCount').textContent = 
-            `${data.remaining}/${data.total}`;
+        document.querySelector('.downloads-remaining').textContent = 
+            `Downloads restantes: ${data.remaining}/${data.total}`;
     } catch (error) {
         console.error('Erro ao atualizar contador:', error);
     }
 }
 
-// Atualiza contador ao carregar a página
+async function startProgressMonitoring(downloadId) {
+    const interval = setInterval(async () => {
+        try {
+            const response = await fetch(`https://harvester-api-three.vercel.app/api/download/${downloadId}/status`);
+            const data = await response.json();
+            
+            const progressBar = document.querySelector('.progress-bar');
+            const progressText = document.querySelector('.progress-text');
+            
+            if (data.status === 'completed') {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Download Completo!';
+                window.location.href = `https://harvester-api-three.vercel.app/api/download/${downloadId}/file`;
+            } else if (data.status === 'error') {
+                clearInterval(interval);
+                progressText.textContent = 'Erro: ' + data.error;
+            } else {
+                progressBar.style.width = `${data.progress}%`;
+                progressText.textContent = `${data.progress}% Concluído`;
+            }
+        } catch (error) {
+            console.error('Erro ao verificar status:', error);
+        }
+    }, 1000);
+}
+
+// Atualiza contador ao carregar
 document.addEventListener('DOMContentLoaded', updateDownloadsCount);
