@@ -1,12 +1,6 @@
-const API_CONFIG = {
-    URL: 'https://harvester-api-three.vercel.app/api',
-    SITE_KEY: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' // Chave de teste do reCAPTCHA
-};
-
 async function handleDownload() {
     const url = document.getElementById('videoUrl').value;
     const format = document.getElementById('formatType').value;
-    const quality = document.getElementById('quality').value;
     const statusElement = document.getElementById('download-status');
     const recaptchaResponse = grecaptcha.getResponse();
 
@@ -23,7 +17,7 @@ async function handleDownload() {
     try {
         statusElement.textContent = 'Iniciando download...';
         
-        const response = await fetch(`${API_CONFIG.URL}/download`, {
+        const response = await fetch('https://harvester-api-three.vercel.app/api/download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,19 +26,21 @@ async function handleDownload() {
             body: JSON.stringify({ 
                 url, 
                 format,
-                quality,
                 recaptchaToken: recaptchaResponse 
             })
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Erro ao iniciar download');
+            throw new Error(data.error || 'Erro ao iniciar download');
         }
 
-        const data = await response.json();
-        statusElement.textContent = 'Download iniciado! Aguardando processamento...';
-        checkDownloadStatus(data.downloadId);
+        if (!data.downloadId) {
+            throw new Error('ID do download não recebido');
+        }
+
+        await checkDownloadStatus(data.downloadId);
         
     } catch (error) {
         statusElement.textContent = `Erro: ${error.message}`;
@@ -58,13 +54,11 @@ async function checkDownloadStatus(downloadId) {
     const statusElement = document.getElementById('download-status');
     
     try {
-        const response = await fetch(`${API_CONFIG.URL}/download/${downloadId}/status`);
+        const response = await fetch(`https://harvester-api-three.vercel.app/api/download/${downloadId}/status`);
         const data = await response.json();
-
+        
         if (data.status === 'completed') {
-            statusElement.textContent = 'Download concluído!';
-            // Inicia o download do arquivo
-            window.location.href = `${API_CONFIG.URL}/download/${downloadId}/file`;
+            window.location.href = `https://harvester-api-three.vercel.app/api/download/${downloadId}/file`;
             updateDownloadsCount();
         } else if (data.status === 'error') {
             statusElement.textContent = `Erro: ${data.error}`;
@@ -74,7 +68,6 @@ async function checkDownloadStatus(downloadId) {
         }
     } catch (error) {
         statusElement.textContent = 'Erro ao verificar status do download';
-        console.error('Erro:', error);
     }
 }
 
