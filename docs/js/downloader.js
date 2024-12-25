@@ -60,7 +60,11 @@ document.addEventListener('keydown', (e) => {
 // Função para atualizar o contador de downloads
 async function updateDownloadsCount() {
     try {
-        const response = await fetch(`${API_URL}/api/downloads/remaining`);
+        const response = await apply(`${API_URL}/api/downloads/remaining`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
         const data = await response.json();
         
         if (data && !data.error) {
