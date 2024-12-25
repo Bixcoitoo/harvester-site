@@ -40,3 +40,23 @@ fetch = new Proxy(fetch, {
         return target.call(thisArg, url, options);
     }
 }); 
+
+async function apply(url, options = {}) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Origin': 'https://harvesterdownloader.site'
+    };
+    
+    const credentials = options.method === 'OPTIONS' ? 'omit' : 'include';
+    
+    return fetch(url, {
+        ...options,
+        headers: {
+            ...headers,
+            ...options.headers
+        },
+        credentials: credentials,
+        mode: 'cors'
+    });
+} 
