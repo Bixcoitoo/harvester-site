@@ -81,18 +81,38 @@ async function updateDownloadsCount() {
 // Atualiza o contador a cada 30 segundos e após cada download
 setInterval(updateDownloadsCount, 30000);
 
-async function startDownload(url) {
+async function startDownload(url, format) {
     try {
-        const response = await apply('https://harvester-api-42f53e6844e5.herokuapp.com/api/download', {
+        const response = await fetch(`${API_URL}${DOWNLOAD_ENDPOINT}`, {
             method: 'POST',
-            body: JSON.stringify({ url: url })
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Canvas-Fingerprint': await getFingerprint()
+            },
+            credentials: 'include',
+            body: JSON.stringify({ url, format })
         });
-        
-        const data = await response.json();
-        return data;
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Inicia download do arquivo
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = getFilename(url, format);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+
+        await updateDownloadsCount();
     } catch (error) {
         console.error('Erro no download:', error);
-        throw error;
+        showError('Erro ao realizar download. Tente novamente.');
     }
 }
 
