@@ -42,21 +42,31 @@ fetch = new Proxy(fetch, {
 }); 
 
 async function apply(url, options = {}) {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Origin': 'https://harvesterdownloader.site'
-    };
-    
-    const credentials = options.method === 'OPTIONS' ? 'omit' : 'include';
-    
-    return fetch(url, {
-        ...options,
-        headers: {
-            ...headers,
-            ...options.headers
-        },
-        credentials: credentials,
-        mode: 'cors'
-    });
+    try {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Origin': 'https://harvesterdownloader.site'
+        };
+        
+        // Sempre usar credentials: 'include'
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...headers,
+                ...options.headers
+            },
+            credentials: 'include',
+            mode: 'cors'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return response;
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        throw error;
+    }
 } 

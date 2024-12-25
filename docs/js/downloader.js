@@ -77,111 +77,18 @@ async function updateDownloadsCount() {
 // Atualiza o contador a cada 30 segundos e após cada download
 setInterval(updateDownloadsCount, 30000);
 
-async function startDownload() {
-    const downloadButton = document.querySelector('.download-action-btn');
-    downloadButton.disabled = true;
-    
+async function startDownload(url) {
     try {
-        // 1. Validação inicial
-        showStatus("1/7 - Validando entrada...");
-        const url = document.getElementById('videoUrl').value;
-        const format = document.getElementById('formatType').value;
-        const quality = document.getElementById('quality').value;
-        
-        if (!url) {
-            showStatus("❌ Link inválido", "Por favor, insira um link válido");
-            return;
-        }
-
-        // 2. Verificação do Captcha
-        showStatus("2/7 - Verificando captcha...");
-        const captchaToken = grecaptcha.getResponse(captchaWidget);
-        if (!captchaToken) {
-            showStatus("❌ Captcha não verificado", "Por favor, complete o captcha antes de continuar");
-            return;
-        }
-
-        // 3. Iniciando requisição
-        showStatus("3/7 - Iniciando processamento...");
-        const response = await fetch(`${API_URL}/api/download`, {
+        const response = await apply('https://harvester-api-42f53e6844e5.herokuapp.com/api/download', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                url, 
-                format, 
-                quality, 
-                captcha_token: captchaToken 
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Erro no download');
-        }
-
-        // Recebe o tamanho total do arquivo
-        const totalSize = response.headers.get('Content-Length');
-        const contentType = response.headers.get('Content-Type');
-        const reader = response.body.getReader();
-        let receivedLength = 0;
-        const chunks = []; // Armazena os chunks para criar o blob depois
-
-        // Lê o stream de dados
-        while(true) {
-            const {done, value} = await reader.read();
-            
-            if (done) {
-                break;
-            }
-            
-            chunks.push(value); // Guarda o chunk
-            receivedLength += value.length;
-            
-            // Calcula e mostra o progresso
-            const progress = (receivedLength / totalSize) * 100;
-            showStatus(
-                `5/7 - Baixando arquivo... ${progress.toFixed(1)}%`,
-                `Recebido: ${formatBytes(receivedLength)} de ${formatBytes(totalSize)}`,
-                progress
-            );
-        }
-
-        // Cria o blob com o tipo de conteúdo correto
-        const blob = new Blob(chunks, { 
-            type: contentType || (format === 'mp3' ? 'audio/mpeg' : 'video/mp4')
+            body: JSON.stringify({ url: url })
         });
         
-        showStatus("6/7 - Preparando arquivo...", 
-            updateDownloadDetails(response.headers.get('Content-Disposition')
-                ?.split('filename="')[1]
-                ?.split('"')[0] 
-                || 'download', blob.size, format));
-
-        // Inicia o download no navegador
-        showStatus("7/7 - Iniciando download no navegador...");
-        const a = document.createElement('a');
-        a.href = window.URL.createObjectURL(blob);
-        a.download = response.headers.get('Content-Disposition')
-            ?.split('filename="')[1]
-            ?.split('"')[0] 
-            || 'download';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        // Download concluído
-        showStatus("✅ Download concluído com sucesso!", 
-            );
-        grecaptcha.reset();
-        await updateDownloadsCount(); // Atualiza o contador
-
+        const data = await response.json();
+        return data;
     } catch (error) {
-        showStatus("❌ Erro no download", error.message);
-        console.error('Erro:', error);
-    } finally {
-        downloadButton.disabled = false;
+        console.error('Erro no download:', error);
+        throw error;
     }
 }
 
