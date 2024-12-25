@@ -57,19 +57,20 @@ async function handleUrlDownload() {
 
 async function updateDownloadsCount() {
     try {
-        const userId = generateUserId();
+        const userId = localStorage.getItem('userId') || generateUserId();
+        localStorage.setItem('userId', userId);
+
         const response = await fetch('https://harvester-api-three.vercel.app/api/downloads/remaining', {
             method: 'GET',
             headers: {
                 'User-Id': userId,
                 'Accept': 'application/json'
             },
-            mode: 'cors',
             credentials: 'include'
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
 
