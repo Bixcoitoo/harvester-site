@@ -25,8 +25,8 @@
     <script src="js/downloader.js"></script>
     <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
-    
-    </script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="js/downloader.js"></script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
@@ -74,7 +74,7 @@
 
                 <div id="captcha"></div>
 
-                <button onclick="startDownload()" class="download-action-btn">
+                <button onclick="handleDownload()" class="download-action-btn">
                     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
                     </svg>
@@ -258,6 +258,8 @@
             </div>
         </div>
     </div>
+
+    <div class="g-recaptcha" data-sitekey="SEU_SITE_KEY_AQUI"></div>
 
     <script src="js/main.js"></script>
     <script src="js/carousel.js"></script>

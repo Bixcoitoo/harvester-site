@@ -27,7 +27,10 @@ function onCaptchaExpired() {
     showCaptchaMessage('O captcha expirou. Por favor, complete novamente.', true);
 }
 
-const API_URL = 'https://harvester-api-three.vercel.app/api';
+// Verifica se API_URL já existe globalmente
+if (typeof API_URL === 'undefined') {
+    const API_URL = 'https://harvester-api-three.vercel.app/api';
+}
 
 // Aumenta o intervalo de atualização para 60 segundos
 const COUNTER_UPDATE_INTERVAL = 60000; // 60 segundos
@@ -113,13 +116,19 @@ async function checkDownloadStatus(downloadId) {
 }
 
 // Função principal de download
-async function startDownload() {
+async function handleDownload() {
     const url = document.getElementById('videoUrl').value;
     const format = document.getElementById('formatType').value;
     const statusElement = document.getElementById('download-status');
-    
+    const recaptchaResponse = grecaptcha.getResponse();
+
     if (!url) {
         statusElement.textContent = 'Por favor, insira uma URL válida';
+        return;
+    }
+
+    if (!recaptchaResponse) {
+        statusElement.textContent = 'Por favor, complete o reCAPTCHA';
         return;
     }
 
@@ -131,7 +140,11 @@ async function startDownload() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url, format })
+            body: JSON.stringify({ 
+                url, 
+                format,
+                recaptchaToken: recaptchaResponse 
+            })
         });
 
         const data = await response.json();
@@ -146,6 +159,8 @@ async function startDownload() {
     } catch (error) {
         statusElement.textContent = `Erro: ${error.message}`;
         console.error('Erro:', error);
+    } finally {
+        grecaptcha.reset();
     }
 }
 
