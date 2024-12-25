@@ -22,7 +22,7 @@
     </script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script src="js/config.js"></script>
-    <script src="js/downloader.js" defer></script>
+    <script src="js/downloader.js"></script>
     <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
     
@@ -74,7 +74,12 @@
 
                 <div id="captcha"></div>
 
-                <button onclick="handleDownload()">Download</button>
+                <button onclick="startDownload()" class="download-action-btn">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                    </svg>
+                    Baixar
+                </button>
 
                 <!-- Novo elemento para o contador -->
                 <div class="download-limits">
@@ -257,21 +262,5 @@
     <script src="js/main.js"></script>
     <script src="js/carousel.js"></script>
     <script src="js/download-modal.js"></script>
-
-    <script>
-    import { startDownload } from './services/downloadService';
-
-    async function handleDownload() {
-      try {
-        const url = document.getElementById('videoUrl').value;
-        const format = document.querySelector('input[name="format"]:checked').value;
-        
-        const result = await startDownload(url, format);
-        console.log('Download iniciado:', result);
-      } catch (error) {
-        console.error('Erro:', error.message);
-      }
-    }
-    </script>
 </body>
 </html> 

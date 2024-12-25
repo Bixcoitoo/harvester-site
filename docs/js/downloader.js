@@ -27,9 +27,7 @@ function onCaptchaExpired() {
     showCaptchaMessage('O captcha expirou. Por favor, complete novamente.', true);
 }
 
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5001'
-    : 'https://harvester-api-42f53e6844e5.herokuapp.com';
+const API_URL = 'https://harvester-api-three.vercel.app/api';
 
 // Aumenta o intervalo de atualização para 60 segundos
 const COUNTER_UPDATE_INTERVAL = 60000; // 60 segundos
@@ -81,40 +79,78 @@ async function updateDownloadsCount() {
 // Atualiza o contador a cada 30 segundos e após cada download
 setInterval(updateDownloadsCount, 30000);
 
-async function startDownload(url, format) {
+// Função para obter downloads restantes
+async function checkRemainingDownloads() {
     try {
-        const response = await fetch(`${API_URL}${DOWNLOAD_ENDPOINT}`, {
+        const response = await fetch(`${API_URL}/downloads/remaining`);
+        const data = await response.json();
+        document.getElementById('downloadsCount').textContent = 
+            `${data.remaining}/${data.total}`;
+    } catch (error) {
+        console.error('Erro ao verificar downloads restantes:', error);
+    }
+}
+
+// Função para verificar status do download
+async function checkDownloadStatus(downloadId) {
+    try {
+        const response = await fetch(`${API_URL}/download/${downloadId}/status`);
+        const data = await response.json();
+        
+        const statusElement = document.getElementById('download-status');
+        if (data.status === 'completed') {
+            statusElement.textContent = 'Download concluído!';
+            checkRemainingDownloads();
+        } else if (data.status === 'error') {
+            statusElement.textContent = `Erro: ${data.error}`;
+        } else {
+            statusElement.textContent = `Progresso: ${data.progress}%`;
+            setTimeout(() => checkDownloadStatus(downloadId), 1000);
+        }
+    } catch (error) {
+        console.error('Erro ao verificar status:', error);
+    }
+}
+
+// Função principal de download
+async function startDownload() {
+    const url = document.getElementById('videoUrl').value;
+    const format = document.getElementById('formatType').value;
+    const statusElement = document.getElementById('download-status');
+    
+    if (!url) {
+        statusElement.textContent = 'Por favor, insira uma URL válida';
+        return;
+    }
+
+    try {
+        statusElement.textContent = 'Iniciando download...';
+        
+        const response = await fetch(`${API_URL}/download`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Canvas-Fingerprint': await getFingerprint()
+                'Content-Type': 'application/json'
             },
-            credentials: 'include',
             body: JSON.stringify({ url, format })
         });
 
+        const data = await response.json();
+        
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(data.error || 'Erro ao iniciar download');
         }
 
-        // Inicia download do arquivo
-        const blob = await response.blob();
-        const downloadUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = getFilename(url, format);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(downloadUrl);
-
-        await updateDownloadsCount();
+        statusElement.textContent = 'Download iniciado! Aguarde...';
+        checkDownloadStatus(data.downloadId);
+        
     } catch (error) {
-        console.error('Erro no download:', error);
-        showError('Erro ao realizar download. Tente novamente.');
+        statusElement.textContent = `Erro: ${error.message}`;
+        console.error('Erro:', error);
     }
 }
+
+// Verifica downloads restantes ao carregar a página
+document.addEventListener('DOMContentLoaded', checkRemainingDownloads);
 
 function formatBytes(bytes) {
     if (bytes === 0) return '0 Bytes';
