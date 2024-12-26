@@ -4,7 +4,7 @@ async function handleUrlDownload() {
     const format = document.querySelector('input[name="format"]:checked').value;
     
     try {
-        const response = await fetch('https://api.harvesterdownloader.site/api/download', {
+        const response = await fetch('http://br1.bronxyshost.com:4214/download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,12 +31,12 @@ async function handleUrlDownload() {
 async function startProgressMonitoring(downloadId) {
     const interval = setInterval(async () => {
         try {
-            const response = await fetch(`https://api.harvesterdownloader.site/api/download/${downloadId}/status`);
+            const response = await fetch(`http://br1.bronxyshost.com:4214/status/${downloadId}`);
             const data = await response.json();
             
             if (data.status === 'completed') {
                 clearInterval(interval);
-                window.location.href = `https://api.harvesterdownloader.site/api/download/${downloadId}/file`;
+                window.location.href = `http://br1.bronxyshost.com:4214/download/${downloadId}`;
             } else if (data.status === 'error') {
                 clearInterval(interval);
                 alert('Erro no download: ' + data.error);

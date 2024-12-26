@@ -154,3 +154,42 @@
     background: #1976D2;
     transform: translateY(-2px);
 }
+
+.server-controls {
+    margin-top: 10px;
+    padding: 5px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.server-indicator {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.server-indicator.production {
+    background: #28a745;
+    color: white;
+}
+
+.server-indicator.development {
+    background: #ffc107;
+    color: black;
+}
+
+.server-toggle {
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.server-toggle:hover {
+    background: #f0f0f0;
+}

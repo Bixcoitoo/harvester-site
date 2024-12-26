@@ -12,24 +12,23 @@ function generateUserId() {
 async function handleUrlDownload() {
     try {
         const url = document.querySelector('.url-input').value;
-        const format = document.querySelector('input[name="format"]:checked')?.value || 'mp3';
+        const format = document.querySelector('#formatType').value;
         const userId = generateUserId();
 
-        // Validação básica da URL
         if (!url) {
             throw new Error('URL é obrigatória');
         }
 
-        // Validar se é uma URL do YouTube ou SoundCloud
-        if (!url.includes('youtube.com') && !url.includes('youtu.be') && !url.includes('soundcloud.com')) {
-            throw new Error('URL inválida. Apenas YouTube e SoundCloud são suportados.');
+        if (!url.includes('youtube.com') && !url.includes('youtu.be')) {
+            throw new Error('URL inválida. Apenas YouTube é suportado.');
         }
 
         document.querySelector('.progress-container').style.display = 'block';
         document.querySelector('.progress-bar').style.width = '0%';
         document.querySelector('.progress-text').textContent = 'Iniciando...';
 
-        const response = await fetch('https://harvester-api-three.vercel.app/api/download', {
+        const serverUrl = getServerUrl();
+        const response = await fetch(`${serverUrl}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,61 +47,25 @@ async function handleUrlDownload() {
 
         const data = await response.json();
         startProgressMonitoring(data.downloadId);
-        updateDownloadsCount();
     } catch (error) {
         document.querySelector('.progress-text').textContent = `Erro: ${error.message}`;
         console.error('Erro:', error);
     }
 }
 
-async function updateDownloadsCount() {
-    try {
-        const userId = localStorage.getItem('userId') || generateUserId();
-        localStorage.setItem('userId', userId);
-
-        const response = await fetch('https://harvester-api-three.vercel.app/api/downloads/remaining', {
-            method: 'GET',
-            headers: {
-                'User-Id': userId,
-                'Accept': 'application/json'
-            },
-            mode: 'cors',
-            credentials: 'same-origin'
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        document.querySelector('.downloads-remaining').textContent = 
-            `Downloads restantes: ${data.remaining}/${data.total}`;
-    } catch (error) {
-        console.error('Erro ao atualizar contador:', error);
-        document.querySelector('.downloads-remaining').textContent = 'Erro ao carregar downloads restantes';
-    }
-}
-
 async function startProgressMonitoring(downloadId) {
+    const serverUrl = getServerUrl();
     const interval = setInterval(async () => {
         try {
-            const response = await fetch(`https://harvester-api-three.vercel.app/api/download/${downloadId}/status`);
+            const response = await fetch(`${serverUrl}/status/${downloadId}`);
             const data = await response.json();
-            
-            const progressBar = document.querySelector('.progress-bar');
-            const progressText = document.querySelector('.progress-text');
             
             if (data.status === 'completed') {
                 clearInterval(interval);
-                progressBar.style.width = '100%';
-                progressText.textContent = 'Download Completo!';
-                window.location.href = `https://harvester-api-three.vercel.app/api/download/${downloadId}/file`;
+                window.location.href = `${serverUrl}/download/${downloadId}`;
             } else if (data.status === 'error') {
                 clearInterval(interval);
-                progressText.textContent = 'Erro: ' + data.error;
-            } else {
-                progressBar.style.width = `${data.progress}%`;
-                progressText.textContent = `${data.progress}% Concluído`;
+                alert('Erro no download: ' + data.error);
             }
         } catch (error) {
             console.error('Erro ao verificar status:', error);
@@ -110,5 +73,4 @@ async function startProgressMonitoring(downloadId) {
     }, 1000);
 }
 
-// Atualiza contador ao carregar
-document.addEventListener('DOMContentLoaded', updateDownloadsCount);
+

@@ -22,6 +22,9 @@
     </script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script src="js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initServerConfig);
+    </script>
 
     <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
@@ -47,6 +50,7 @@
                     </div>
                 </div>
                 <a href="#download" class="cta-button">Download Grátis do Programa</a>
+                
             </div>
         </div>
     </div>
@@ -61,6 +65,7 @@
                     class="url-input">
                 
                 <div class="download-options">
+                    
                     <select id="formatType" class="format-select">
                         <option value="mp3">MP3 (Áudio)</option>
                         <option value="mp4">MP4 (Vídeo)</option>
@@ -73,16 +78,13 @@
                 </div>
 
                 <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
-
-                <button 
-                onclick="handleUrlDownload()" 
-                class="online-download-btn">
-                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
-                </svg>
-                Baixar
-            </button>
-
+                <button onclick="handleUrlDownload()" class="online-download-btn">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                    </svg>
+                    Baixar
+                </button>
+           
                 <!-- Novo elemento para o contador -->
                 <div class="download-limits">
                     <div class="download-counter">
@@ -95,6 +97,12 @@
                 </div>
             </div>
             <div id="download-status" class="status-message"></div>
+            <div class="server-controls">
+                <span class="server-indicator">Servidor: Produção</span>
+                <button onclick="toggleServer()" class="server-toggle">
+                    Alternar Servidor
+                </button>
+            </div>
         </div>
     </section>
 
@@ -268,7 +276,7 @@
         <div class="progress-text">0%</div>
     </div>
 
-    <div class="downloads-remaining">Downloads restantes: -/-</div>
+   
 
     <style>
     .progress-container {
