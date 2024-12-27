@@ -1,7 +1,7 @@
 // Configuração da API
 const API_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
     ? 'http://localhost:4214'
-    : 'http://br1.bronxyshost.com:4214';
+    : `${window.location.protocol}//br1.bronxyshost.com:4214`;
 
 console.log('API URL configurada:', API_URL);
 
@@ -87,7 +87,8 @@ async function checkLimitStatus() {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            mode: 'cors'
         });
 
         if (!response.ok) {
