@@ -20,7 +20,7 @@
             crossorigin="anonymous"
             onerror="document.querySelectorAll('.ad-notice').forEach(n => n.style.display = 'block');">
     </script>
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="js/config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', initServerConfig);
@@ -28,7 +28,6 @@
 
     <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="js/downloader.js"></script>
 </head>
 <body>
@@ -77,8 +76,12 @@
                     </select>
                 </div>
 
-                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
-                <button onclick="handleUrlDownload()" class="online-download-btn">
+                <div class="g-recaptcha" 
+                     data-sitekey="6Ld0L6MqAAAAAKsYTwpiDuWO5RwUdbTa8AQBFuh1"
+                     data-callback="onCaptchaSuccess"
+                     data-expired-callback="onCaptchaExpired">
+                </div>
+                <button id="downloadBtn" class="online-download-btn" disabled>
                     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
                     </svg>
@@ -269,7 +272,6 @@
         </div>
     </div>
 
-    <div class="g-recaptcha" data-sitekey="SEU_SITE_KEY_AQUI"></div>
 
     <div class="progress-container" style="display: none;">
         <div class="progress-bar"></div>
