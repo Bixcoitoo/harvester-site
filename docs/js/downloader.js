@@ -1,7 +1,7 @@
 // Configuração da API
 const API_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
     ? 'http://localhost:4214'
-    : 'http://br1.bronxyshost.com:4214';
+    : 'https://br1.bronxyshost.com:4214';
 
 console.log('API URL configurada:', API_URL);
 
@@ -146,45 +146,25 @@ async function handleUrlDownload() {
 
     try {
         downloadBtn.disabled = true;
-        statusDiv.innerHTML = '<div class="status-message">Verificando captcha...</div>';
+        statusDiv.innerHTML = '<div class="status-message">Iniciando download...</div>';
 
         const url = document.querySelector('.url-input').value;
         const format = document.querySelector('#formatType').value;
-
-        // Verificar conectividade primeiro
-        try {
-            const pingResponse = await fetch(`${API_URL}/health`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                },
-                mode: 'cors',
-                cache: 'no-cache',
-                credentials: 'same-origin'
-            });
-            
-            if (!pingResponse.ok) {
-                throw new Error('Servidor indisponível');
-            }
-        } catch (pingError) {
-            throw new Error('Erro de conexão com o servidor. Verifique sua internet.');
-        }
 
         const response = await fetch(`${API_URL}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Origin': window.location.origin
+                'Accept': 'application/json'
             },
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
             body: JSON.stringify({ 
                 url,
                 format,
                 token: captchaToken
             })
+        }).catch(error => {
+            console.error('Erro na requisição:', error);
+            throw new Error('Erro de conexão. Verifique se o servidor está online.');
         });
 
         if (!response.ok) {
@@ -204,9 +184,8 @@ async function handleUrlDownload() {
     } catch (error) {
         console.error('Erro detalhado:', error);
         statusDiv.innerHTML = `<div class="status-message error">${error.message}</div>`;
-        hcaptcha.reset();
-    } finally {
         downloadBtn.disabled = false;
+        hcaptcha.reset();
         captchaToken = null;
     }
 }
