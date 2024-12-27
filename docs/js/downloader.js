@@ -1,7 +1,13 @@
 // Configuração da API
-const API_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
-    ? 'http://localhost:4214'
-    : 'https://br1.bronxyshost.com:4214';
+const API_URL = (() => {
+    if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
+        return 'http://localhost:4214';
+    }
+    // Tentar HTTPS primeiro, fallback para HTTP
+    return window.location.protocol === 'https:' 
+        ? 'https://br1.bronxyshost.com:4215'
+        : 'http://br1.bronxyshost.com:4214';
+})();
 
 console.log('API URL configurada:', API_URL);
 
@@ -289,6 +295,48 @@ async function startProgressMonitoring(downloadId) {
             clearInterval(interval);
         }
     }, 1000);
+}
+
+// Função de pesquisa
+async function searchVideo(query) {
+    const statusDiv = document.getElementById('download-status');
+    statusDiv.innerHTML = '<div class="status-message">Pesquisando...</div>';
+
+    try {
+        const response = await fetch(`${API_URL}/api/search?q=${encodeURIComponent(query)}`);
+        if (!response.ok) throw new Error('Erro na pesquisa');
+        
+        const videos = await response.json();
+        
+        if (videos.length === 0) {
+            statusDiv.innerHTML = '<div class="status-message error">Nenhum vídeo encontrado</div>';
+            return;
+        }
+
+        // Mostrar resultados
+        const resultsHtml = videos.map(video => `
+            <div class="video-result" onclick="selectVideo('${video.url}')">
+                <img src="${video.thumb}" alt="${video.titulo}">
+                <div class="video-info">
+                    <h3>${video.titulo}</h3>
+                    <p>Duração: ${video.tempo}</p>
+                </div>
+            </div>
+        `).join('');
+
+        statusDiv.innerHTML = `
+            <div class="search-results">
+                ${resultsHtml}
+            </div>
+        `;
+    } catch (error) {
+        statusDiv.innerHTML = '<div class="status-message error">Erro ao pesquisar vídeos</div>';
+    }
+}
+
+// Função para selecionar vídeo
+function selectVideo(url) {
+    document.querySelector('.url-input').value = url;
 }
 
 
