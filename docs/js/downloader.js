@@ -1,7 +1,7 @@
 // Configuração da API
 const API_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
     ? 'http://localhost:4214'
-    : 'https://br1.bronxyshost.com:4214';
+    : 'http://br1.bronxyshost.com:4214';
 
 console.log('API URL configurada:', API_URL);
 
@@ -157,14 +157,12 @@ async function handleUrlDownload() {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
+            mode: 'cors',
             body: JSON.stringify({ 
                 url,
                 format,
                 token: captchaToken
             })
-        }).catch(error => {
-            console.error('Erro na requisição:', error);
-            throw new Error('Erro de conexão. Verifique se o servidor está online.');
         });
 
         if (!response.ok) {
