@@ -1,30 +1,54 @@
 // Configuração da API
-const API_URL = window.location.hostname === 'localhost' 
+const API_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
     ? 'http://localhost:4214'
-    : 'http://br1.bronxyshost.com:4214'; // Altere para seu domínio de produção
+    : 'http://br1.bronxyshost.com:4214';
 
-// Configuração do reCAPTCHA
+console.log('API URL configurada:', API_URL);
+
+// Configuração do hCaptcha
 window.onloadCallback = function() {
-    const recaptchaElement = document.querySelector('.g-recaptcha');
-    if (recaptchaElement) {
-        grecaptcha.render(recaptchaElement, {
-            'sitekey': '6Ld0L6MqAAAAAKsYTwpiDuWO5RwUdbTa8AQBFuh1',
-            'callback': onCaptchaSuccess,
-            'expired-callback': onCaptchaExpired
-        });
+    const captchaElement = document.getElementById('h-captcha');
+    if (captchaElement) {
+        try {
+            console.log('Inicializando hCaptcha...');
+            hcaptcha.render(captchaElement, {
+                'sitekey': '20000000-ffff-ffff-ffff-000000000002',
+                'theme': 'light',
+                'callback': function(token) {
+                    console.log('hCaptcha verificado com sucesso');
+                    onCaptchaSuccess(token);
+                },
+                'expired-callback': onCaptchaExpired,
+                'error-callback': function(err) {
+                    console.error('Erro no hCaptcha:', err);
+                    onCaptchaExpired();
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao inicializar hCaptcha:', error);
+        }
+    } else {
+        console.error('Elemento hCaptcha não encontrado');
     }
 };
 
-let recaptchaToken = null;
+let captchaToken = null;
 
 function onCaptchaSuccess(token) {
-    recaptchaToken = token;
-    document.getElementById('downloadBtn').disabled = false;
+    captchaToken = token;
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.disabled = false;
+    }
 }
 
 function onCaptchaExpired() {
-    recaptchaToken = null;
-    document.getElementById('downloadBtn').disabled = true;
+    captchaToken = null;
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.disabled = true;
+    }
+    hcaptcha.reset();
 }
 
 
@@ -112,29 +136,20 @@ function showSuccess(message) {
 
 // Modificar a função handleUrlDownload
 async function handleUrlDownload() {
-    const url = document.getElementById('videoUrl').value;
-    const formatType = document.getElementById('formatType').value;
     const downloadBtn = document.getElementById('downloadBtn');
     const statusDiv = document.getElementById('download-status');
     
-    if (!url) {
-        showError('Por favor, insira uma URL válida');
-        return;
-    }
-    
-    if (!url.includes('youtube.com/') && !url.includes('youtu.be/')) {
-        showError('Por favor, insira uma URL válida do YouTube');
-        return;
-    }
-    
-    if (!recaptchaToken) {
-        showError('Por favor, complete o reCAPTCHA');
+    if (!captchaToken) {
+        showError('Por favor, complete o captcha');
         return;
     }
 
     try {
         downloadBtn.disabled = true;
-        statusDiv.innerHTML = '<div class="status-message">Verificando reCAPTCHA...</div>';
+        statusDiv.innerHTML = '<div class="status-message">Verificando captcha...</div>';
+
+        const url = document.querySelector('.url-input').value;
+        const format = document.querySelector('#formatType').value;
 
         const response = await fetch(`${API_URL}/download`, {
             method: 'POST',
@@ -142,38 +157,33 @@ async function handleUrlDownload() {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            credentials: 'include',
             body: JSON.stringify({ 
-                url: url.trim(),
-                format: formatType,
-                recaptchaToken 
+                url,
+                format,
+                token: captchaToken
             })
         });
 
-        const data = await response.json();
-        console.log('Resposta do servidor:', data);
-        
         if (!response.ok) {
-            throw new Error(data.error || `Erro ${response.status}: ${response.statusText}`);
+            throw new Error(`Erro no servidor: ${response.status}`);
         }
 
-        if (data.success) {
-            if (data.limitInfo) {
-                updateDownloadCounter(data.limitInfo);
-            }
-            
-            statusDiv.innerHTML = '<div class="status-message success">Download iniciado com sucesso!</div>';
-            await monitorDownloadStatus(data.downloadId);
+        const result = await response.json();
+        
+        if (result.success) {
+            showSuccess('Download iniciado com sucesso!');
+            startProgressMonitoring(result.downloadId);
         } else {
-            throw new Error(data.error || 'Erro desconhecido');
+            throw new Error(result.error || 'Erro ao iniciar download');
         }
+
     } catch (error) {
         statusDiv.innerHTML = `<div class="status-message error">${error.message}</div>`;
         console.error('Erro detalhado:', error);
+        hcaptcha.reset();
     } finally {
         downloadBtn.disabled = false;
-        grecaptcha.reset();
-        recaptchaToken = null;
+        captchaToken = null;
     }
 }
 
@@ -218,5 +228,65 @@ document.addEventListener('DOMContentLoaded', () => {
     checkLimitStatus(); // Verificar imediatamente
     setInterval(checkLimitStatus, 30000); // Verificar a cada 30 segundos
 });
+
+async function startProgressMonitoring(downloadId) {
+    const statusDiv = document.getElementById('download-status');
+    const interval = setInterval(async () => {
+        try {
+            const response = await fetch(`${API_URL}/status/${downloadId}`);
+            const data = await response.json();
+            
+            if (data.status === 'completed') {
+                clearInterval(interval);
+                statusDiv.innerHTML = '<div class="status-message success">Download concluído! Iniciando download do arquivo...</div>';
+                
+                // Criar um link temporário para download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = `${API_URL}/download/${downloadId}`;
+                downloadLink.style.display = 'none';
+                document.body.appendChild(downloadLink);
+                
+                try {
+                    // Iniciar o download via fetch
+                    const downloadResponse = await fetch(`${API_URL}/download/${downloadId}`);
+                    if (!downloadResponse.ok) throw new Error('Erro ao baixar arquivo');
+                    
+                    // Converter a resposta em blob
+                    const blob = await downloadResponse.blob();
+                    
+                    // Criar URL do blob
+                    const url = window.URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    
+                    // Pegar o nome do arquivo do header Content-Disposition
+                    const disposition = downloadResponse.headers.get('content-disposition');
+                    const fileName = disposition 
+                        ? decodeURIComponent(disposition.split('filename*=UTF-8\'\'')[1])
+                        : 'download.mp3';
+                    
+                    downloadLink.download = fileName;
+                    downloadLink.click();
+                    
+                    // Limpar
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(downloadLink);
+                    statusDiv.innerHTML = '<div class="status-message success">Download concluído com sucesso!</div>';
+                } catch (downloadError) {
+                    console.error('Erro no download:', downloadError);
+                    statusDiv.innerHTML = '<div class="status-message error">Erro ao baixar arquivo. Tente novamente.</div>';
+                }
+            } else if (data.status === 'error') {
+                clearInterval(interval);
+                statusDiv.innerHTML = `<div class="status-message error">Erro: ${data.error}</div>`;
+            } else {
+                statusDiv.innerHTML = '<div class="status-message">Processando download...</div>';
+            }
+        } catch (error) {
+            console.error('Erro ao verificar status:', error);
+            statusDiv.innerHTML = '<div class="status-message error">Erro ao verificar status do download</div>';
+            clearInterval(interval);
+        }
+    }, 1000);
+}
 
 

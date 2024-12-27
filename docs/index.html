@@ -20,15 +20,15 @@
             crossorigin="anonymous"
             onerror="document.querySelectorAll('.ad-notice').forEach(n => n.style.display = 'block');">
     </script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="js/config.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', initServerConfig);
-    </script>
-
     <script src="js/fingerprint.js"></script>
     <script src="js/error-handler.js"></script>
     <script src="js/downloader.js"></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', initServerConfig);
+    </script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
@@ -76,10 +76,12 @@
                     </select>
                 </div>
 
-                <div class="g-recaptcha" 
-                     data-sitekey="6Ld0L6MqAAAAAKsYTwpiDuWO5RwUdbTa8AQBFuh1"
-                     data-callback="onCaptchaSuccess"
-                     data-expired-callback="onCaptchaExpired">
+                <div class="captcha-container">
+                    <div id="h-captcha" class="h-captcha"
+                         data-sitekey="20000000-ffff-ffff-ffff-000000000002"
+                         data-callback="onCaptchaSuccess"
+                         data-expired-callback="onCaptchaExpired">
+                    </div>
                 </div>
                 <button id="downloadBtn" class="online-download-btn" disabled>
                     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
