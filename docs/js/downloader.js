@@ -1,7 +1,7 @@
 // Configuração da API
 const API_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
     ? 'http://localhost:4214'
-    : `${window.location.protocol}//br1.bronxyshost.com:4214`;
+    : 'http://br1.bronxyshost.com:4214';
 
 console.log('API URL configurada:', API_URL);
 
@@ -88,21 +88,20 @@ async function checkLimitStatus() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            mode: 'cors'
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const limitInfo = await response.json();
         if (limitInfo.success) {
             updateDownloadCounter({
                 current: limitInfo.current,
                 total: limitInfo.total
             });
-        } else {
-            throw new Error(limitInfo.error || 'Erro desconhecido');
         }
     } catch (error) {
         console.error('Erro ao verificar limite:', error);
@@ -159,6 +158,7 @@ async function handleUrlDownload() {
                 'Accept': 'application/json'
             },
             mode: 'cors',
+            credentials: 'include',
             body: JSON.stringify({ 
                 url,
                 format,
