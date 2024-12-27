@@ -151,12 +151,35 @@ async function handleUrlDownload() {
         const url = document.querySelector('.url-input').value;
         const format = document.querySelector('#formatType').value;
 
+        // Verificar conectividade primeiro
+        try {
+            const pingResponse = await fetch(`${API_URL}/health`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin'
+            });
+            
+            if (!pingResponse.ok) {
+                throw new Error('Servidor indisponível');
+            }
+        } catch (pingError) {
+            throw new Error('Erro de conexão com o servidor. Verifique sua internet.');
+        }
+
         const response = await fetch(`${API_URL}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Origin': window.location.origin
             },
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             body: JSON.stringify({ 
                 url,
                 format,
@@ -165,7 +188,8 @@ async function handleUrlDownload() {
         });
 
         if (!response.ok) {
-            throw new Error(`Erro no servidor: ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `Erro no servidor: ${response.status}`);
         }
 
         const result = await response.json();
@@ -178,8 +202,8 @@ async function handleUrlDownload() {
         }
 
     } catch (error) {
-        statusDiv.innerHTML = `<div class="status-message error">${error.message}</div>`;
         console.error('Erro detalhado:', error);
+        statusDiv.innerHTML = `<div class="status-message error">${error.message}</div>`;
         hcaptcha.reset();
     } finally {
         downloadBtn.disabled = false;
