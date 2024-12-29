@@ -1,9 +1,9 @@
 // Configuração da API
 const API_URL = (() => {
     if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
-        return 'http://localhost:4216';
+        return 'http://localhost:4218';
     }
-    return 'https://170.231.166.109:4216';
+    return 'https://170.231.166.109:4218';
 })();
 
 console.log('API URL configurada:', API_URL);
