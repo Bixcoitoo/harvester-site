@@ -1,12 +1,9 @@
 // Configuração da API
 const API_URL = (() => {
     if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
-        return 'http://localhost:4214';
+        return 'http://localhost:4216';
     }
-    // Tentar HTTPS primeiro, fallback para HTTP
-    return window.location.protocol === 'https:' 
-        ? 'https://br1.bronxyshost.com:4215'
-        : 'http://br1.bronxyshost.com:4214';
+    return 'http://harvesterdownloader.site';
 })();
 
 console.log('API URL configurada:', API_URL);
