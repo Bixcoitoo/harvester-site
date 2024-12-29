@@ -1,9 +1,27 @@
 // Configuração da API
 const API_URL = (() => {
-    if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
-        return 'http://localhost:4218';
-    }
-    return 'https://170.231.166.109:4218';
+    const portas = [4218, 4219, 4220, 4221];
+    const hostname = window.location.hostname.includes('localhost') || 
+                    window.location.hostname.includes('127.0.0.1') 
+                    ? 'http://localhost' 
+                    : 'https://170.231.166.109';
+    
+    return async function() {
+        for (const porta of portas) {
+            try {
+                const response = await fetch(`${hostname}:${porta}/health-check`, {
+                    method: 'GET',
+                    timeout: 1000
+                });
+                if (response.ok) {
+                    return `${hostname}:${porta}`;
+                }
+            } catch (error) {
+                continue;
+            }
+        }
+        throw new Error('Nenhum servidor disponível');
+    };
 })();
 
 console.log('API URL configurada:', API_URL);
@@ -85,7 +103,7 @@ function updateDownloadCounter(limitInfo) {
 // Função para verificar o status do limite
 async function checkLimitStatus() {
     try {
-        const response = await fetch(`${API_URL}/limit-status`, {
+        const response = await fetch(`${API_URL()}/limit-status`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -154,7 +172,7 @@ async function handleUrlDownload() {
         const url = document.querySelector('.url-input').value;
         const format = document.querySelector('#formatType').value;
 
-        const response = await fetch(`${API_URL}/download`, {
+        const response = await fetch(`${API_URL()}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -238,7 +256,7 @@ async function startProgressMonitoring(downloadId) {
     const statusDiv = document.getElementById('download-status');
     const interval = setInterval(async () => {
         try {
-            const response = await fetch(`${API_URL}/status/${downloadId}`);
+            const response = await fetch(`${API_URL()}/status/${downloadId}`);
             const data = await response.json();
             
             if (data.status === 'completed') {
@@ -247,13 +265,13 @@ async function startProgressMonitoring(downloadId) {
                 
                 // Criar um link temporário para download
                 const downloadLink = document.createElement('a');
-                downloadLink.href = `${API_URL}/download/${downloadId}`;
+                downloadLink.href = `${API_URL()}/download/${downloadId}`;
                 downloadLink.style.display = 'none';
                 document.body.appendChild(downloadLink);
                 
                 try {
                     // Iniciar o download via fetch
-                    const downloadResponse = await fetch(`${API_URL}/download/${downloadId}`);
+                    const downloadResponse = await fetch(`${API_URL()}/download/${downloadId}`);
                     if (!downloadResponse.ok) throw new Error('Erro ao baixar arquivo');
                     
                     // Converter a resposta em blob
@@ -300,7 +318,7 @@ async function searchVideo(query) {
     statusDiv.innerHTML = '<div class="status-message">Pesquisando...</div>';
 
     try {
-        const response = await fetch(`${API_URL}/api/search?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_URL()}/api/search?q=${encodeURIComponent(query)}`);
         if (!response.ok) throw new Error('Erro na pesquisa');
         
         const videos = await response.json();
