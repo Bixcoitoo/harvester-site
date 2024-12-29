@@ -6,7 +6,9 @@ const API_URL = (() => {
                     ? 'http://localhost' 
                     : 'https://170.231.166.109';
     
-    return async function() {
+    let cachedUrl = null;
+    
+    async function findAvailableServer() {
         for (const porta of portas) {
             try {
                 const response = await fetch(`${hostname}:${porta}/health-check`, {
@@ -14,13 +16,26 @@ const API_URL = (() => {
                     timeout: 1000
                 });
                 if (response.ok) {
-                    return `${hostname}:${porta}`;
+                    cachedUrl = `${hostname}:${porta}`;
+                    return cachedUrl;
                 }
             } catch (error) {
                 continue;
             }
         }
         throw new Error('Nenhum servidor disponível');
+    }
+
+    return {
+        getUrl: async () => {
+            if (!cachedUrl) {
+                cachedUrl = await findAvailableServer();
+            }
+            return cachedUrl;
+        },
+        resetCache: () => {
+            cachedUrl = null;
+        }
     };
 })();
 
@@ -103,7 +118,8 @@ function updateDownloadCounter(limitInfo) {
 // Função para verificar o status do limite
 async function checkLimitStatus() {
     try {
-        const response = await fetch(`${API_URL()}/limit-status`, {
+        const apiUrl = await API_URL.getUrl();
+        const response = await fetch(`${apiUrl}/limit-status`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -126,6 +142,7 @@ async function checkLimitStatus() {
         }
     } catch (error) {
         console.error('Erro ao verificar limite:', error);
+        API_URL.resetCache(); // Reset cache em caso de erro
     }
 }
 
@@ -171,8 +188,9 @@ async function handleUrlDownload() {
 
         const url = document.querySelector('.url-input').value;
         const format = document.querySelector('#formatType').value;
+        const apiUrl = await API_URL.getUrl();
 
-        const response = await fetch(`${API_URL()}/download`, {
+        const response = await fetch(`${apiUrl}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -207,6 +225,7 @@ async function handleUrlDownload() {
         downloadBtn.disabled = false;
         hcaptcha.reset();
         captchaToken = null;
+        API_URL.resetCache(); // Reset cache em caso de erro
     }
 }
 
